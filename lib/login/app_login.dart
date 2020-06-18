@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileoa/db/dao/UserDao.dart';
 import 'package:mobileoa/home/homePage.dart';
+import 'package:mobileoa/home/home_tab_page.dart';
+import 'package:mobileoa/model/User.dart';
+import 'package:mobileoa/util/common_toast.dart';
 import 'package:mobileoa/widget/cricle_path.dart';
 
 /// app 登陆
@@ -23,8 +27,15 @@ class _LoginHome extends StatefulWidget {
 }
 
 class _LoginWidget extends State<_LoginHome> with TickerProviderStateMixin {
+  //文件控制器
+  var nameController = new TextEditingController();
+  var passController = new TextEditingController();
+
+  //动画控制器
   AnimationController _controller;
   Animation<double> _animation;
+
+  //动画开始值
   var begin = 0.0;
 
   @override
@@ -39,30 +50,33 @@ class _LoginWidget extends State<_LoginHome> with TickerProviderStateMixin {
           if (_animation.value >= 1) {
             //延时2s跳转
             Future.delayed(Duration(seconds: 2), () {
-              Navigator.of(context).push(PageRouteBuilder(pageBuilder:
-                  (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation) {
-                return AnimatedBuilder(
-                  animation: animation,
-                  builder: (context, child) {
-                    return ClipPath(
-                      clipper: CirclePath(animation.value),
-                      child: child,
-                    );
-                  },
-                  child: HomePage(),
-                );
-              }));
+//              Navigator.of(context).push(PageRouteBuilder(pageBuilder:
+//                  (BuildContext context, Animation<double> animation,
+//                      Animation<double> secondaryAnimation) {
+//                return AnimatedBuilder(
+//                  animation: animation,
+//                  builder: (context, child) {
+//                    return ClipPath(
+//                      clipper: CirclePath(animation.value),
+//                      child: child,
+//                    );
+//                  },
+//                  child: HomeNavigationPage(),
+//                );
+//              }));
+              Navigator.pushAndRemoveUntil(
+                context,
+                new MaterialPageRoute(builder: (context) => HomeNavigationPage()),
+                    (route) => route == null,
+              );
             });
           }
         });
       });
-
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -86,7 +100,9 @@ class _LoginWidget extends State<_LoginHome> with TickerProviderStateMixin {
             ),
             TextField(
               maxLines: 1,
+              controller: nameController,
               keyboardType: TextInputType.text,
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: '请输入用户名',
                 contentPadding: EdgeInsets.all(10),
@@ -102,11 +118,13 @@ class _LoginWidget extends State<_LoginHome> with TickerProviderStateMixin {
             ),
             TextField(
               maxLines: 1,
+              controller: passController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                   hintText: '请输入密码',
                   contentPadding: EdgeInsets.all(10),
                   icon: Icon(Icons.lock)),
+              style: TextStyle(color: Colors.white),
               autofocus: false,
               obscureText: true,
               cursorColor: Colors.white,
@@ -158,10 +176,28 @@ class _LoginWidget extends State<_LoginHome> with TickerProviderStateMixin {
     );
   }
 
-  void _login() {
-    if (_controller.isAnimating) {
-      return;
-    }
+  void _login() async {
     _controller.forward();
+    //绑定一个管理员
+//    UserDao.getInstance().insertUser(
+//        new User(id: 1, name: "admin", password: "123456", sex: 1, age: 19));
+//
+//    if (nameController.text.length > 0 && passController.text.length > 0) {
+//      //db查询
+//      List<User> users = await UserDao.getInstance()
+//          .getUser(nameController.text, passController.text);
+//
+//      if (users.isNotEmpty && users[0].name == nameController.text &&
+//          users[0].password == passController.text) {
+//        if (_controller.isAnimating) {
+//          return;
+//        }
+//        _controller.forward();
+//      } else {
+//        ToastUtils.showError("账户或密码不正确");
+//      }
+//    } else {
+//      ToastUtils.showError("请输入账户和密码");
+//    }
   }
 }

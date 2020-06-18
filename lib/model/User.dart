@@ -1,15 +1,14 @@
 class User {
-  final int id;
-  final String name;
-  final int age;
-  final int sex; //1:men ,2:women
+  int id;
+  String name;
+  String password;
+  int age;
+  int sex; //1:men ,2:women
 
-  User({this.id, this.name, this.age, this.sex});
-
-
+  User({this.id, this.name, this.password, this.age, this.sex});
 
   @override
   String toString() {
-    return 'User{id:$id,name:$name,age:$age}';
+    return 'User{id:$id,name:$name,password:$password,age:$age}';
   }
 }

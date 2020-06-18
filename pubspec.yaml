@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   sqflite: ^1.3.0
   path:
+  fluttertoast: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +45,11 @@ flutter:
   assets:
     - images/launch_screen.jpg
     - images/login_bg.jpeg
+    - images/ic_home_normal.png
+    - images/ic_home_selected.png
+    - images/ic_mine_normal.png
+    - images/ic_mine_selected.png
+    - images/icon_mountain.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

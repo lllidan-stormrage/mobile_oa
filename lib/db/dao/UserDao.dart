@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:mobileoa/db/dbUtil.dart';
 import 'package:mobileoa/model/User.dart';
 import 'package:sqflite/sqflite.dart';
 
 class UserDao {
-
   static String tabName = "user";
 
   //外界入口
@@ -36,10 +36,11 @@ class UserDao {
       "id": user.id,
       "name": user.name,
       "age": user.age,
+      "password": user.password,
     };
   }
 
-  void updateUser(User user) async {
+  Future<void> updateUser(User user) async {
     // Get a reference to the database (获得数据库引用)
     final db = await database;
     // Update the given Dog (修改给定的狗狗的数据)
@@ -53,7 +54,21 @@ class UserDao {
     );
   }
 
-  Future<List<User>>getUsers() async {
+  Future<List<User>> getUser(String name, String pass) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'select * from $tabName where name= ? and password = ?', [name, pass]);
+    return List.generate(maps.length, (i) {
+      return User(
+          id: maps[i]['id'],
+          name: maps[i]['name'],
+          age: maps[i]['age'],
+          sex: maps[i]['sex'],
+          password: maps[i]['password']);
+    });
+  }
+
+  Future<List<User>> getUsers() async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     // Query the table for all The Dogs (查询数据表，获取所有的狗狗们)
@@ -64,7 +79,8 @@ class UserDao {
           id: maps[i]['id'],
           name: maps[i]['name'],
           age: maps[i]['age'],
-          sex: maps[i]['sex']);
+          sex: maps[i]['sex'],
+          password: maps[i]['password']);
     });
   }
 
