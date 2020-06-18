@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:mobileoa/util/data_helper.dart';
 import 'package:mobileoa/widget/home_fun_card_widget.dart';
 import 'package:mobileoa/widget/home_title_zone_widget.dart';
 
@@ -47,63 +48,64 @@ class _HomePage extends State<HomePage> {
               HomeTitleZoneView("考勤管理"),
               Container(
                   height: 120,
-                  child: ListView(
+                  child: ListView.builder(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      HomeFunCardView("签到打卡"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      HomeFunCardView("考勤统计"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      HomeFunCardView("加班"),
-                    ],
+                    itemCount: DataHelper.getAgendaList().length,
+                    itemBuilder: (context, i) {
+                      return HomeFunCardView(DataHelper.getAgendaList()[i]);
+                    },
                   )),
               HomeTitleZoneView("会议管理"),
               Container(
                   height: 120,
-                  child: ListView(
+                  child: ListView.builder(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      HomeFunCardView("会议室预定"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      HomeFunCardView("会议记录"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      HomeFunCardView("公告"),
-                    ],
+                    itemCount: DataHelper.getAgendaList().length,
+                    itemBuilder: (context, i) {
+                      return HomeFunCardView(DataHelper.getMeetingList()[i]);
+                    },
                   )),
-              HomeTitleZoneView("其他"),
-              Container(
-                  height: 120,
-                  padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
-                        return HomeFunCardView("体温记录");
-                      })),
+              Card(
+                color: Colors.white,
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                margin: EdgeInsets.all(25),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "为疫情防控需要，请每天登记体温",
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          "去登记",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Color.fromRGBO(231, 37, 68, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onPressed: () {
+                          //todo
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ));

@@ -9,37 +9,37 @@ class HomeFunCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      width: 140,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(6.0)),
-      child: Stack(
-        alignment: Alignment(-1, 1),
-        children: <Widget>[
-          Positioned(
-            top: 90,
-            left: 10,
-            child: Text(
-              mTitle,
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.lightBlue),
+    return Card(
+      color: Colors.white,
+      margin: EdgeInsets.fromLTRB(15, 0, 0, 1),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      child: Container(
+        width: 140,
+        child: Stack(
+          alignment: Alignment(-1, 1),
+          children: <Widget>[
+            Positioned(
+              top: 90,
+              left: 10,
+              child: Text(
+                mTitle,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.lightBlue),
+              ),
             ),
-          ),
-          Positioned(
-            left: 10,
-            bottom: 40,
-            child: Icon(
-              Icons.assignment,
-              size: 40,
-            ),
-          )
-        ],
+            Positioned(
+              left: 10,
+              bottom: 40,
+              child: Icon(
+                Icons.assignment,
+                size: 40,
+              ),
+            )
+          ],
+        ),
       ),
     );
-    ;
   }
 }
