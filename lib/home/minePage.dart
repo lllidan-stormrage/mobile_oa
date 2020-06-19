@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileoa/util/data_helper.dart';
 import 'package:mobileoa/widget/mine_info_widget.dart';
 
 class MinePage extends StatefulWidget {
@@ -8,6 +9,15 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePage extends State<MinePage> {
+
+  List<String> mTitles = CommonDataHelper.getUserInfoTitle();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -31,7 +41,7 @@ class _MinePage extends State<MinePage> {
               },
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20,bottom: 20),
+              padding: EdgeInsets.only(top: 20, bottom: 20),
               child: Text(
                 'admin',
                 style: TextStyle(
@@ -40,10 +50,7 @@ class _MinePage extends State<MinePage> {
                     color: Colors.black),
               ),
             ),
-            Container(
-              height: 20,
-              color: Colors.orange
-            ),
+            Container(height: 20, color: Color(0xffe6e6e6)),
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text(
@@ -56,12 +63,13 @@ class _MinePage extends State<MinePage> {
                 textAlign: TextAlign.start,
               ),
             ),
-//            ListView.builder(itemBuilder: (context,i){
-//
-//            },
-//            itemCount: 1,
-//              shrinkWrap: true,
-//              physics: BouncingScrollPhysics(),)
+            ListView.builder(itemBuilder: (context,i){
+
+              return MineInfoView(mTitles[i],"测试");
+            },
+            itemCount: mTitles.length,
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),)
           ],
         ),
       ),

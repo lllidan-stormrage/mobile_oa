@@ -1,30 +1,35 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:splashscreen/splashscreen.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_splash_screen/flutter_splash_screen.dart';
 
 import 'login/app_login.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+  //Flutter沉浸式状态栏
+  if (Platform.isAndroid) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  }
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     //初始化sp
+    hideSplashScreen();
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'hello meto',
-        home: SplashScreen(
-          seconds: 3,
-          title: new Text(
-            'Welcome In MobileOA',
-            style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-          ),
-          navigateAfterSeconds: LoginPage(),
-          styleTextUnderTheLoader: new TextStyle(),
-          image: new Image.network('https://i.imgur.com/TyCSG9A.png'),
-          backgroundColor: Colors.white,
-          photoSize: 100.0,
-        ));
+      debugShowCheckedModeBanner: false,
+      title: 'hello meto',
+      home: LoginPage(),
+    );
+  }
+
+  Future<void> hideSplashScreen() async {
+    Future.delayed(
+        Duration(milliseconds: 2000), () => FlutterSplashScreen.hide());
   }
 }
-

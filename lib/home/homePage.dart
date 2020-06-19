@@ -19,8 +19,8 @@ class _HomePage extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    mAgendaList = DataHelper.getAgendaList();
-    mMeetingList = DataHelper.getMeetingList();
+    mAgendaList = CommonDataHelper.getAgendaList();
+    mMeetingList = CommonDataHelper.getMeetingList();
   }
 
   @override

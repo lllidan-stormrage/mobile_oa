@@ -69,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_splash_screen:
+    dependency: "direct main"
+    description:
+      name: flutter_splash_screen
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -140,13 +147,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.7.0"
-  splashscreen:
-    dependency: "direct main"
-    description:
-      name: splashscreen
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.2.0"
   sqflite:
     dependency: "direct main"
     description:

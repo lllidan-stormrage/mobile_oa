@@ -1,4 +1,4 @@
-class DataHelper {
+class CommonDataHelper {
 
 
   static List<String> getAgendaList() {
@@ -21,6 +21,16 @@ class DataHelper {
     List<String> datas = new List();
     datas.add("体温记录");
     return datas;
+  }
+
+  static List<String> getUserInfoTitle(){
+    List<String> datas = new List();
+    datas.add("昵称");
+    datas.add("电话");
+    datas.add("年龄");
+    datas.add("加班时长");
+    return datas;
+
   }
 
 
