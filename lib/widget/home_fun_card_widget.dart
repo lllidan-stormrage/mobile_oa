@@ -37,6 +37,7 @@ class HomeFunCardView extends StatelessWidget {
                 size: 40,
               ),
             )
+
           ],
         ),
       ),

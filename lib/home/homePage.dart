@@ -12,6 +12,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+
+  var mAgendaList;
+  var mMeetingList;
+
+  @override
+  void initState() {
+    super.initState();
+    mAgendaList = DataHelper.getAgendaList();
+    mMeetingList = DataHelper.getMeetingList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -52,9 +63,9 @@ class _HomePage extends State<HomePage> {
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount: DataHelper.getAgendaList().length,
+                    itemCount:mAgendaList.length,
                     itemBuilder: (context, i) {
-                      return HomeFunCardView(DataHelper.getAgendaList()[i]);
+                      return HomeFunCardView(mAgendaList[i]);
                     },
                   )),
               HomeTitleZoneView("会议管理"),
@@ -64,9 +75,9 @@ class _HomePage extends State<HomePage> {
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount: DataHelper.getAgendaList().length,
+                    itemCount: mMeetingList.length,
                     itemBuilder: (context, i) {
-                      return HomeFunCardView(DataHelper.getMeetingList()[i]);
+                      return HomeFunCardView(mMeetingList[i]);
                     },
                   )),
               Card(
