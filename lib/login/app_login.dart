@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileoa/db/dao/UserDao.dart';
 import 'package:mobileoa/home/home_tab_page.dart';
+import 'package:mobileoa/model/User.dart';
+import 'package:mobileoa/util/app_util.dart';
+import 'package:mobileoa/util/common_toast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// app 登陆
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginWidget();
 }
-
 
 class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
   //文件控制器
@@ -154,27 +158,34 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   void _login() async {
-    _controller.forward();
     //绑定一个管理员
-//    UserDao.getInstance().insertUser(
-//        new User(id: 1, name: "admin", password: "123456", sex: 1, age: 19));
-//
-//    if (nameController.text.length > 0 && passController.text.length > 0) {
-//      //db查询
-//      List<User> users = await UserDao.getInstance()
-//          .getUser(nameController.text, passController.text);
-//
-//      if (users.isNotEmpty && users[0].name == nameController.text &&
-//          users[0].password == passController.text) {
-//        if (_controller.isAnimating) {
-//          return;
-//        }
-//        _controller.forward();
-//      } else {
-//        ToastUtils.showError("账户或密码不正确");
-//      }
-//    } else {
-//      ToastUtils.showError("请输入账户和密码");
-//    }
+    UserDao.getInstance().insertUser(new User(
+        id: 1,
+        name: "admin",
+        password: "123456",
+        sex: 1,
+        age: 19,
+        company: "字节跳动"));
+
+    if (nameController.text.length > 0 && passController.text.length > 0) {
+      //db查询
+      List<User> users = await UserDao.getInstance()
+          .getUser(nameController.text, passController.text);
+
+      if (users.isNotEmpty &&
+          users[0].name == nameController.text &&
+          users[0].password == passController.text) {
+        print(users[0].toString());
+        if (_controller.isAnimating) {
+          return;
+        }
+        AppUtils.saveLoginUserId(users[0].id);
+        _controller.forward();
+      } else {
+        ToastUtils.showError("账户或密码不正确");
+      }
+    } else {
+      ToastUtils.showError("请输入账户和密码");
+    }
   }
 }

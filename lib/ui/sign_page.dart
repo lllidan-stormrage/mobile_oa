@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileoa/db/dao/UserDao.dart';
+import 'package:mobileoa/model/User.dart';
+import 'package:mobileoa/util/app_util.dart';
+import 'package:mobileoa/util/date_util.dart';
 
 class SignPage extends StatefulWidget {
   @override
@@ -7,12 +13,33 @@ class SignPage extends StatefulWidget {
 }
 
 class _SignView extends State<SignPage> {
+  String timeStamp = '';
+  DateTime date;
+  User mUser = new User();
+  bool isCallTimeState = false; //计时器是否setState
+  bool xDispose = false;
+
+  @override
+  void initState() {
+    _getDefaultData();
+    _getDate();
+    super.initState();
+  }
+
+  _getDefaultData() async {
+    int id = await AppUtils.getLoginUserId();
+    List<User> user = await UserDao.getInstance().getUserById(id);
+    if (user.isNotEmpty) {
+      mUser = user[0];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "华东",
+          mUser.company != null ? mUser.company : "",
           style: TextStyle(fontSize: 16),
         ),
       ),
@@ -36,7 +63,7 @@ class _SignView extends State<SignPage> {
                         width: 10,
                       ),
                       Text(
-                        "admin",
+                        mUser.name != null ? mUser.name : "",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -46,7 +73,7 @@ class _SignView extends State<SignPage> {
                 Padding(
                   padding: EdgeInsets.only(right: 15, top: 15),
                   child: Text(
-                    "2020/11/11",
+                    DateUtils.getYYMMDD(),
                     style: TextStyle(fontSize: 14, color: Color(0xff87898C)),
                   ),
                 )
@@ -88,7 +115,7 @@ class _SignView extends State<SignPage> {
                       children: <Widget>[
                         Padding(
                             padding: EdgeInsets.only(left: 20),
-                            child: _buildSign(true, "上班时间 9：00",
+                            child: _buildSign(false, "上班时间 9：00",
                                 time: "08:55",
                                 location: "上海市虹口区水电路1388号晟柏科技园16层")),
                         SizedBox(
@@ -122,40 +149,43 @@ class _SignView extends State<SignPage> {
 
   Widget _buildSign(bool visible, String title,
       {String time = "00：00", String location = "测试"}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(title),
-        Container(
-          padding: EdgeInsets.only(top: 2),
-          width: visible ? 300 : 0.0,
-          height: visible ? 60 : 0.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "打卡时间 $time",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.location_on,
-                    color: Colors.green,
-                  ),
-                  Text(
-                    location,
-                    style: TextStyle(color: Color(0xff87898C), fontSize: 14),
-                  )
-                ],
-              )
-            ],
-          ),
-        )
-      ],
+    return Container(
+      height: 85,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(title),
+          Container(
+            padding: EdgeInsets.only(top: 2),
+            width: visible ? 300 : 0.0,
+            height: visible ? 60 : 0.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "打卡时间 $time",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 2,
+                ),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.green,
+                    ),
+                    Text(
+                      location,
+                      style: TextStyle(color: Color(0xff87898C), fontSize: 14),
+                    )
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -167,7 +197,7 @@ class _SignView extends State<SignPage> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(60),
             gradient: LinearGradient(
-                colors: [ Colors.lightBlue,Colors.blue],
+                colors: [Colors.lightBlue, Colors.blue],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter)),
         child: Stack(
@@ -182,7 +212,7 @@ class _SignView extends State<SignPage> {
             ),
             Positioned(
               bottom: 37,
-              child: Text("15:32:41",
+              child: Text(timeStamp,
                   style: TextStyle(color: Colors.white70, fontSize: 14)),
             )
           ],
@@ -192,5 +222,31 @@ class _SignView extends State<SignPage> {
         // TODO
       },
     );
+  }
+
+  _getDate() {
+    //释放，防止内存leak out
+    if (xDispose) {
+      return;
+    }
+    date = DateTime.now();
+    if (isCallTimeState) {
+      timeStamp =
+          '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
+    } else {
+      setState(() {
+        timeStamp =
+            '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
+      });
+    }
+    Future.delayed(Duration(seconds: 1), () {
+      _getDate();
+    });
+  }
+
+  @override
+  void dispose() {
+    xDispose = true;
+    super.dispose();
   }
 }

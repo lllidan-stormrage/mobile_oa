@@ -1,4 +1,3 @@
-
 import 'package:mobileoa/db/dbUtil.dart';
 import 'package:mobileoa/model/User.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,6 +36,7 @@ class UserDao {
       "name": user.name,
       "age": user.age,
       "password": user.password,
+      "company": user.company,
     };
   }
 
@@ -60,11 +60,29 @@ class UserDao {
         'select * from $tabName where name= ? and password = ?', [name, pass]);
     return List.generate(maps.length, (i) {
       return User(
-          id: maps[i]['id'],
-          name: maps[i]['name'],
-          age: maps[i]['age'],
-          sex: maps[i]['sex'],
-          password: maps[i]['password']);
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        age: maps[i]['age'],
+        sex: maps[i]['sex'],
+        password: maps[i]['password'],
+        company: maps[i]["company"],
+      );
+    });
+  }
+
+  Future<List<User>> getUserById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'select * from $tabName where id= ?', [id]);
+    return List.generate(maps.length, (i) {
+      return User(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        age: maps[i]['age'],
+        sex: maps[i]['sex'],
+        password: maps[i]['password'],
+        company: maps[i]["company"],
+      );
     });
   }
 
@@ -76,11 +94,13 @@ class UserDao {
     // Convert the List<Map<String, dynamic> into a List<Dog> (将 List<Map<String, dynamic> 转换成 List<Dog> 数据类型)
     return List.generate(maps.length, (i) {
       return User(
-          id: maps[i]['id'],
-          name: maps[i]['name'],
-          age: maps[i]['age'],
-          sex: maps[i]['sex'],
-          password: maps[i]['password']);
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        age: maps[i]['age'],
+        sex: maps[i]['sex'],
+        password: maps[i]['password'],
+        company: maps[i]["company"],
+      );
     });
   }
 

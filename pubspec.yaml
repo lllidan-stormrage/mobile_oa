@@ -27,6 +27,7 @@ dependencies:
   fluttertoast: ^4.0.0
   flutter_splash_screen: ^0.1.0
   flutter_webview_plugin: ^0.3.11
+  shared_preferences: ^0.5.7+3
 
 dev_dependencies:
   flutter_test:

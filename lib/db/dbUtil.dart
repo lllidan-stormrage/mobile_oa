@@ -47,6 +47,6 @@ class DbHelperInstance {
     await db.execute(
         "CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)");
     await db.execute(
-        "CREATE TABLE User(id INTEGER PRIMARY KEY,name TEXT,password TEXT,age INTEGER,sex INTEGER)");
+        "CREATE TABLE User(id INTEGER PRIMARY KEY,name TEXT,password TEXT,age INTEGER,sex INTEGER,company TEXT)");
   }
 }
