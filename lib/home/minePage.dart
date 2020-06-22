@@ -10,14 +10,6 @@ class MinePage extends StatefulWidget {
 
 class _MinePage extends State<MinePage> {
 
-  List<String> mTitles = CommonDataHelper.getUserInfoTitle();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -65,9 +57,9 @@ class _MinePage extends State<MinePage> {
             ),
             ListView.builder(itemBuilder: (context,i){
 
-              return MineInfoView(mTitles[i],"测试");
+              return MineInfoView(CommonDataHelper.userTitle[i],"测试");
             },
-            itemCount: mTitles.length,
+            itemCount: CommonDataHelper.userTitle.length,
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),)
           ],

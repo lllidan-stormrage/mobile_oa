@@ -1,27 +1,10 @@
 class CommonDataHelper {
 
 
-  static List<String> getAgendaList() {
-    List<String> datas = new List();
-    datas.add("签到打卡");
-    datas.add("考勤统计");
-    datas.add("加班");
-    return datas;
-  }
+  static final agenda = ["签到打卡","考勤统计","加班"];
+  static final meeting = ["会议室预定","会议记录","公告"];
 
-  static List<String> getMeetingList() {
-    List<String> datas = new List();
-    datas.add("会议室预定");
-    datas.add("会议记录");
-    datas.add("公告");
-    return datas;
-  }
-
-  static List<String> getOtherFun() {
-    List<String> datas = new List();
-    datas.add("体温记录");
-    return datas;
-  }
+  static final userTitle = ["昵称","电话","年龄","加班时长"];
 
   static List<String> getUserInfoTitle(){
     List<String> datas = new List();

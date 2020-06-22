@@ -6,7 +6,7 @@
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <!-- Customize your theme here. -->
         <!--设置透明背景-->
         <item name="android:windowIsTranslucent">true</item>

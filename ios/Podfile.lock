@@ -1,17 +1,26 @@
 PODS:
+  - bdmap_location_flutter_plugin (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_splash_screen (0.0.1):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - "permission_handler (4.4.0+hotfix.4)":
+    - Flutter
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
 
 DEPENDENCIES:
+  - bdmap_location_flutter_plugin (from `.symlinks/plugins/bdmap_location_flutter_plugin/ios`)
   - Flutter (from `Flutter`)
+  - flutter_splash_screen (from `.symlinks/plugins/flutter_splash_screen/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
 SPEC REPOS:
@@ -19,17 +28,26 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
+  bdmap_location_flutter_plugin:
+    :path: ".symlinks/plugins/bdmap_location_flutter_plugin/ios"
   Flutter:
     :path: Flutter
+  flutter_splash_screen:
+    :path: ".symlinks/plugins/flutter_splash_screen/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  bdmap_location_flutter_plugin: 90ebaeaa0ebec0856403d14fb83835daf1817e15
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_splash_screen: 0323a1080aa7853a0f0af4491dc29d034be61746
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  permission_handler: 8278954f2382902f63f00dd8828769c0bd6d511b
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
 
 PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
