@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileoa/db/dao/UserDao.dart';
-import 'package:mobileoa/model/User.dart';
+import 'package:mobileoa/db/dao/sign_dao.dart';
+import 'package:mobileoa/model/user.dart';
+import 'package:mobileoa/model/user_sign.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/date_util.dart';
 
@@ -18,6 +20,7 @@ class _SignView extends State<SignPage> {
   User mUser = new User();
   bool isCallTimeState = false; //计时器是否setState
   bool xDispose = false;
+  UserSign userSign = new UserSign();
 
   @override
   void initState() {
@@ -32,6 +35,30 @@ class _SignView extends State<SignPage> {
     if (user.isNotEmpty) {
       mUser = user[0];
     }
+    // 查询用户是有签到过
+    var date = new DateTime.now();
+    var singInfo = await SignDao.getInstance()
+        .getSign(id, date.year, date.month, date.day);
+    if (singInfo == null || singInfo.isEmpty) {
+      print('111empty');
+      userSign = new UserSign(
+          userId: id,
+          year: date.year,
+          month: date.month,
+          day: date.day,
+          amIsSign: 0,
+          amSignTime: "",
+          amSignPlace: "",
+          pmIsSign: 0,
+          pmSignPlace: "",
+          pmSignTime: "");
+      SignDao.getInstance().insertSign(userSign);
+    } else {
+      userSign = singInfo[0];
+    }
+    print('aaa${userSign.toString()}');
+    List<UserSign> lists = await SignDao.getInstance().getSignAllByUseId(id);
+    print("bbbb${lists.length}");
   }
 
   @override
@@ -115,15 +142,21 @@ class _SignView extends State<SignPage> {
                       children: <Widget>[
                         Padding(
                             padding: EdgeInsets.only(left: 20),
-                            child: _buildSign(false, "上班时间 9：00",
-                                time: "08:55",
-                                location: "上海市虹口区水电路1388号晟柏科技园16层")),
+                            child: _buildSign(
+                                userSign.amIsSign == 1 ? true : false,
+                                "上班时间 9：00",
+                                time: userSign.amSignTime,
+                                location: userSign.amSignPlace)),
                         SizedBox(
                           height: 70,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 20),
-                          child: _buildSign(false, "下班时间 18：00"),
+                          child: _buildSign(
+                              userSign.pmIsSign == 1 ? true : false,
+                              "下班时间 18：00",
+                              time: userSign.pmSignTime,
+                              location: userSign.pmSignPlace),
                         )
                       ],
                     )
@@ -176,7 +209,7 @@ class _SignView extends State<SignPage> {
                       color: Colors.green,
                     ),
                     Text(
-                      location,
+                      location == null ? "测试地址" : location,
                       style: TextStyle(color: Color(0xff87898C), fontSize: 14),
                     )
                   ],
@@ -206,7 +239,7 @@ class _SignView extends State<SignPage> {
             Positioned(
               top: 37,
               child: Text(
-                "下班打卡",
+                userSign.amIsSign == 0 ? "上班打卡" : "下班打卡",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
@@ -219,7 +252,20 @@ class _SignView extends State<SignPage> {
         ),
       ),
       onTap: () {
-        // TODO
+        setState(() {
+          if (userSign.amIsSign == 0) {
+            //上午签到
+            userSign.amSignTime = timeStamp;
+            userSign.amSignPlace = "上海东方体育中心";
+            userSign.amIsSign = 1;
+          } else {
+            //下午签到
+            userSign.pmSignTime = timeStamp;
+            userSign.pmSignPlace = "上海东方体育中心";
+            userSign.pmIsSign = 1;
+          }
+          SignDao.getInstance().insertSign(userSign);
+        });
       },
     );
   }

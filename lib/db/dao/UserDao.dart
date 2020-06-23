@@ -1,9 +1,10 @@
+import 'package:mobileoa/constant.dart';
 import 'package:mobileoa/db/dbUtil.dart';
-import 'package:mobileoa/model/User.dart';
+import 'package:mobileoa/model/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 class UserDao {
-  static String tabName = "user";
+  static String tabName = Constant.tableUser;
 
   //外界入口
   factory UserDao.getInstance() => _getInstance();
@@ -72,8 +73,8 @@ class UserDao {
 
   Future<List<User>> getUserById(int id) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'select * from $tabName where id= ?', [id]);
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('select * from $tabName where id= ?', [id]);
     return List.generate(maps.length, (i) {
       return User(
         id: maps[i]['id'],

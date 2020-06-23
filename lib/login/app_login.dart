@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileoa/db/dao/UserDao.dart';
 import 'package:mobileoa/home/home_tab_page.dart';
-import 'package:mobileoa/model/User.dart';
+import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/common_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';

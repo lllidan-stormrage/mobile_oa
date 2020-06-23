@@ -1,4 +1,5 @@
 
+import 'package:mobileoa/constant.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -45,8 +46,9 @@ class DbHelperInstance {
 
   Future _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)");
+        "CREATE TABLE ${Constant.tableUser}(id INTEGER PRIMARY KEY,name TEXT,password TEXT,age INTEGER,sex INTEGER,company TEXT)");
     await db.execute(
-        "CREATE TABLE User(id INTEGER PRIMARY KEY,name TEXT,password TEXT,age INTEGER,sex INTEGER,company TEXT)");
+        "CREATE TABLE ${Constant.tableSign}(id INTEGER PRIMARY KEY,userId INTEGER,amSignTime TEXT,pmSignTime TEXT,amSignPlace TEXT,pmSignPlace TEXT"
+            ",year INTEGER,month INTEGER,day INTEGER,amIsSign INTEGER,pmIsSign INTEGER)");
   }
 }
