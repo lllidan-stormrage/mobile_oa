@@ -50,5 +50,8 @@ class DbHelperInstance {
     await db.execute(
         "CREATE TABLE ${Constant.tableSign}(id INTEGER PRIMARY KEY,userId INTEGER,amSignTime TEXT,pmSignTime TEXT,amSignPlace TEXT,pmSignPlace TEXT"
             ",year INTEGER,month INTEGER,day INTEGER,amIsSign INTEGER,pmIsSign INTEGER)");
+    await db.execute(
+      "CREATE TABLE ${Constant.tableReSign}(id INTEGER PRIMARY KEY,userId INTEGER,year INTEGER,month INTEGER,place TEXT,signTimeStamp TEXT) "
+    );
   }
 }

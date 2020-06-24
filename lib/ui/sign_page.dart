@@ -52,7 +52,6 @@ class _SignView extends State<SignPage> {
           pmIsSign: 0,
           pmSignPlace: "",
           pmSignTime: "");
-      SignDao.getInstance().insertSign(userSign);
     } else {
       userSign = singInfo[0];
     }
@@ -100,7 +99,7 @@ class _SignView extends State<SignPage> {
                 Padding(
                   padding: EdgeInsets.only(right: 15, top: 15),
                   child: Text(
-                    DateUtils.getYYMMDD(),
+                    DateUtils.getYyMmDd(),
                     style: TextStyle(fontSize: 14, color: Color(0xff87898C)),
                   ),
                 )
@@ -264,7 +263,7 @@ class _SignView extends State<SignPage> {
             userSign.pmSignPlace = "上海东方体育中心";
             userSign.pmIsSign = 1;
           }
-          SignDao.getInstance().insertSign(userSign);
+          SignDao.getInstance().insertOrUpdateSign(userSign);
         });
       },
     );

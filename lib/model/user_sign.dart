@@ -17,6 +17,7 @@ class UserSign {
 
   @override
   String toString() {
-    return "Sign{id = $id,userId = $userId,amIsSign = $amIsSign,pmIsSign = $pmIsSign,amSignTime = $amSignTime,pmSignTime =$pmSignTime,amSignPlace = $amSignPlace,pmSignPlace=$pmSignPlace}";
+    return "Sign{id = $id,userId = $userId,amIsSign = $amIsSign,pmIsSign = $pmIsSign,amSignTime = $amSignTime"
+        ",pmSignTime =$pmSignTime,amSignPlace = $amSignPlace,pmSignPlace=$pmSignPlace,year=$year,month=$month,day=$day}";
   }
 }

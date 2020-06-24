@@ -25,7 +25,7 @@ class MineInfoView extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(left: 18),
-                child:Text(
+                child: Text(
                   mHead,
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -34,22 +34,20 @@ class MineInfoView extends StatelessWidget {
                       fontSize: 16),
                 ),
               ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 18),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        mHead,
-                        textAlign: TextAlign.end,
-                        style: TextStyle(color: Color(0xff87898C)),
-                      ),
-                      Image(
-                        image: AssetImage("images/ic_right_next.png"),
-                      ),
-                    ],
-                  ),
-                )
+              Padding(
+                padding: EdgeInsets.only(right: 18),
+                child: RichText(
+                  text: TextSpan(
+                      text: mHead,
+                      style: TextStyle(color: Color(0xff87898C)),
+                      children: [
+                        WidgetSpan(
+                          child: Image(
+                            image: AssetImage("images/ic_right_next.png"),
+                          ),
+                        )
+                      ]),
+                ),
               )
             ],
           ),

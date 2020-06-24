@@ -1,6 +1,5 @@
 import 'package:mobileoa/constant.dart';
 import 'package:mobileoa/db/dbUtil.dart';
-import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/model/user_sign.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -43,8 +42,8 @@ class SignDao {
       "year": user.year,
       "month": user.month,
       "day": user.day,
-      "amIsSign":user.amIsSign,
-      "pmIsSign":user.pmIsSign,
+      "amIsSign": user.amIsSign,
+      "pmIsSign": user.pmIsSign,
     };
   }
 
@@ -62,12 +61,12 @@ class SignDao {
     );
   }
 
-
-
-  Future<List<UserSign>> getSign(int useId,int year, int month,int day) async {
+  Future<List<UserSign>> getSign(
+      int useId, int year, int month, int day) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'select * from $tabName where userId= ? and year = ? and month = ? and day = ?', [useId, year,month,day]);
+        'select * from $tabName where userId= ? and year = ? and month = ? and day = ?',
+        [useId, year, month, day]);
     return List.generate(maps.length, (i) {
       return UserSign(
         id: maps[i]["id"],
@@ -79,16 +78,39 @@ class SignDao {
         year: maps[i]['year'],
         month: maps[i]['month'],
         day: maps[i]['day'],
-        amIsSign:maps[i]['amIsSign'],
-        pmIsSign:maps[i]['pmIsSign'],
+        amIsSign: maps[i]['amIsSign'],
+        pmIsSign: maps[i]['pmIsSign'],
+      );
+    });
+  }
+
+  Future<List<UserSign>> getSignByMonthWithUser(
+      int useId, int year, int month) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'select * from $tabName where userId= ? and year = ? and month = ? and (amIsSign = ? or pmIsSign = ?)order by id DESC',
+        [useId, year, month, 1, 1]);
+    return List.generate(maps.length, (i) {
+      return UserSign(
+        id: maps[i]["id"],
+        userId: maps[i]['userId'],
+        amSignTime: maps[i]['amSignTime'],
+        amSignPlace: maps[i]['amSignPlace'],
+        pmSignPlace: maps[i]['pmSignPlace'],
+        pmSignTime: maps[i]['pmSignTime'],
+        year: maps[i]['year'],
+        month: maps[i]['month'],
+        day: maps[i]['day'],
+        amIsSign: maps[i]['amIsSign'],
+        pmIsSign: maps[i]['pmIsSign'],
       );
     });
   }
 
   Future<List<UserSign>> getSignAllByUseId(int id) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'select * from $tabName where id= ?', [id]);
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('select * from $tabName where id= ?', [id]);
     return List.generate(maps.length, (i) {
       return UserSign(
         id: maps[i]["id"],
@@ -100,14 +122,13 @@ class SignDao {
         year: maps[i]['year'],
         month: maps[i]['month'],
         day: maps[i]['day'],
-        amIsSign:maps[i]['amIsSign'],
-        pmIsSign:maps[i]['pmIsSign'],
+        amIsSign: maps[i]['amIsSign'],
+        pmIsSign: maps[i]['pmIsSign'],
       );
     });
   }
 
-
-  Future<void> insertSign(UserSign user) async {
+  Future<void> insertOrUpdateSign(UserSign user) async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     // Insert the Dog into the correct table. Also specify the
@@ -115,6 +136,32 @@ class SignDao {
     // multiple times, it replaces the previous data.
     // 在正确的数据表里插入狗狗的数据。我们也要在这个操作中指定 `conflictAlgorithm` 策略。
     // 如果同样的狗狗数据被多次插入，后一次插入的数据将会覆盖之前的数据。
+
+    var data = await getSign(user.userId, user.year, user.month, user.day);
+    if (data != null && data.isNotEmpty) {
+      user.id = data[0].id;
+    }
+    await db.insert(
+      tabName,
+      toMap(user),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  //此方法存在则不进行更新，用于脚本执行
+  Future<void> insertByScript(UserSign user) async {
+    // Get a reference to the database (获得数据库引用)
+    final Database db = await database;
+    // Insert the Dog into the correct table. Also specify the
+    // `conflictAlgorithm`. In this case, if the same dog is inserted
+    // multiple times, it replaces the previous data.
+    // 在正确的数据表里插入狗狗的数据。我们也要在这个操作中指定 `conflictAlgorithm` 策略。
+    // 如果同样的狗狗数据被多次插入，后一次插入的数据将会覆盖之前的数据。
+
+    var data = await getSign(user.userId, user.year, user.month, user.day);
+    if (data != null && data.isNotEmpty) {
+      return;
+    }
     await db.insert(
       tabName,
       toMap(user),

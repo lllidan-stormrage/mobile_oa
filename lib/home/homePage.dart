@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:mobileoa/db/dao/db_script.dart';
+import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/data_helper.dart';
 import 'package:mobileoa/widget/home_fun_card_widget.dart';
 import 'package:mobileoa/widget/home_title_zone_widget.dart';
@@ -12,6 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initDbExecute();
+  }
+
+  void initDbExecute() async {
+    int id = await AppUtils.getLoginUserId();
+    await DbScript.insertOrUpdateTableSign(id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +47,7 @@ class _HomePage extends State<HomePage> {
           ];
         },
         body: Container(
-          color: Color.fromARGB(1, 135, 137, 140),
+          color: Color(0xffF5F5F5),
           child: ListView(
             children: <Widget>[
               Container(
@@ -53,9 +66,9 @@ class _HomePage extends State<HomePage> {
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount:CommonDataHelper.agenda.length,
+                    itemCount: CommonDataHelper.agenda.length,
                     itemBuilder: (context, i) {
-                      return HomeFunCardView(CommonDataHelper.agenda[i],i);
+                      return HomeFunCardView(CommonDataHelper.agenda[i], i, 0);
                     },
                   )),
               HomeTitleZoneView("会议管理"),
@@ -67,13 +80,14 @@ class _HomePage extends State<HomePage> {
                     scrollDirection: Axis.horizontal,
                     itemCount: CommonDataHelper.meeting.length,
                     itemBuilder: (context, i) {
-                      return HomeFunCardView(CommonDataHelper.meeting[i],i);
+                      return HomeFunCardView(CommonDataHelper.meeting[i], i, 1);
                     },
                   )),
               Card(
                 color: Colors.white,
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
                 margin: EdgeInsets.all(25),
                 child: Container(
                   padding: EdgeInsets.all(15),

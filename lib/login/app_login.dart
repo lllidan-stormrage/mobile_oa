@@ -5,7 +5,6 @@ import 'package:mobileoa/home/home_tab_page.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/common_toast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// app 登陆
 class LoginPage extends StatefulWidget {
@@ -47,6 +46,7 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
           }
         });
       });
+
   }
 
   @override
