@@ -10,7 +10,7 @@ class SignRecord extends StatefulWidget {
 }
 
 class _SignRecordView extends State<SignRecord> {
-  List<UserSign> firstSign = new List();
+  List<UserSignEntity> firstSign = new List();
   List<ListItem> mItems = new List();
 
   @override
@@ -27,21 +27,25 @@ class _SignRecordView extends State<SignRecord> {
     setState(() {
       if (firstSign != null && firstSign.isNotEmpty) {
         for (int i = 0; i < firstSign.length; i++) {
-          print("not null ${firstSign[i].toString()}");
+          print("${firstSign[i].toString()}");
           if (firstSign[i].pmIsSign == 1) {
             //添加
             mItems.add(new MessageItem(
                 time: firstSign[i].pmSignTime,
                 place: firstSign[i].pmSignPlace,
-                title:
-                    "${firstSign[i].year}/${firstSign[i].month}/${firstSign[i].day} 下班卡"));
+                state: 2,
+                timeYmd:
+                    '${firstSign[i].year}/${firstSign[i].month}/${firstSign[i].day}',
+                title: " 下班打卡"));
           }
           if (firstSign[i].amIsSign == 1) {
             mItems.add(new MessageItem(
                 time: firstSign[i].amSignTime,
                 place: firstSign[i].amSignPlace,
-                title:
-                    "${firstSign[i].year}/${firstSign[i].month}/${firstSign[i].day} 上班卡"));
+                state: 1,
+                timeYmd:
+                    '${firstSign[i].year}/${firstSign[i].month}/${firstSign[i].day}',
+                title: "上班打卡"));
           }
         }
       } else {
@@ -57,7 +61,6 @@ class _SignRecordView extends State<SignRecord> {
         title: Text("我的签到记录", style: TextStyle(fontSize: 16)),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 15),
         child: ListView.builder(
           physics: BouncingScrollPhysics(),
           // Let the ListView know how many items it needs to build
@@ -86,35 +89,62 @@ class _SignRecordView extends State<SignRecord> {
   }
 
   Widget _buildMsg(MessageItem item) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+    return Container(
+      margin: EdgeInsets.only(top: 12, left: 10, right: 10),
+      padding: EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(5)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            item.title,
-            style: TextStyle(
-                fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.only(left: 10, top: 8, bottom: 8),
+            decoration: BoxDecoration(
+                color: Color(0xfff5f5f5),
+                borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      item.state == 1 ? Icons.work : Icons.time_to_leave,
+                      color: Colors.blue,
+                    ),
+                    Text('${item.title}')
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Text(
+                      '${item.time}'),
+                )
+              ],
+            ),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(item.place),
-          SizedBox(
-            height: 5,
-          ),
-          Text(item.time),
           Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Divider(
-              height: 1,
-              color: Colors.black12,
+            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: Text(
+              '打卡成功',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: Text(
+              '${item.timeYmd}日，位于${item.place}打卡',
+              style: TextStyle(color: Colors.black54),
             ),
           )
         ],
       ),
     );
   }
+
 }
 
 abstract class ListItem {}
@@ -124,8 +154,10 @@ class MessageItem implements ListItem {
   final String title;
   final String time;
   final String place;
+  final String timeYmd;
+  final int state;
 
-  MessageItem({this.title, this.time, this.place});
+  MessageItem({this.title, this.time, this.place, this.timeYmd, this.state});
 }
 
 class EmptyItem implements ListItem {

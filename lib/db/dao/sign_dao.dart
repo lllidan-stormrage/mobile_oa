@@ -1,5 +1,5 @@
 import 'package:mobileoa/constant.dart';
-import 'package:mobileoa/db/dbUtil.dart';
+import 'package:mobileoa/db/db_util.dart';
 import 'package:mobileoa/model/user_sign.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -31,7 +31,7 @@ class SignDao {
     return _database;
   }
 
-  Map<String, dynamic> toMap(UserSign user) {
+  Map<String, dynamic> toMap(UserSignEntity user) {
     return {
       "id": user.id,
       "userId": user.userId,
@@ -47,7 +47,7 @@ class SignDao {
     };
   }
 
-  Future<void> updateSign(UserSign user) async {
+  Future<void> updateSign(UserSignEntity user) async {
     // Get a reference to the database (获得数据库引用)
     final db = await database;
     // Update the given Dog (修改给定的狗狗的数据)
@@ -61,14 +61,14 @@ class SignDao {
     );
   }
 
-  Future<List<UserSign>> getSign(
+  Future<List<UserSignEntity>> getSign(
       int useId, int year, int month, int day) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         'select * from $tabName where userId= ? and year = ? and month = ? and day = ?',
         [useId, year, month, day]);
     return List.generate(maps.length, (i) {
-      return UserSign(
+      return UserSignEntity(
         id: maps[i]["id"],
         userId: maps[i]['userId'],
         amSignTime: maps[i]['amSignTime'],
@@ -84,14 +84,14 @@ class SignDao {
     });
   }
 
-  Future<List<UserSign>> getSignByMonthWithUser(
+  Future<List<UserSignEntity>> getSignByMonthWithUser(
       int useId, int year, int month) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         'select * from $tabName where userId= ? and year = ? and month = ? and (amIsSign = ? or pmIsSign = ?)order by id DESC',
         [useId, year, month, 1, 1]);
     return List.generate(maps.length, (i) {
-      return UserSign(
+      return UserSignEntity(
         id: maps[i]["id"],
         userId: maps[i]['userId'],
         amSignTime: maps[i]['amSignTime'],
@@ -107,12 +107,12 @@ class SignDao {
     });
   }
 
-  Future<List<UserSign>> getSignAllByUseId(int id) async {
+  Future<List<UserSignEntity>> getSignAllByUseId(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.rawQuery('select * from $tabName where id= ?', [id]);
     return List.generate(maps.length, (i) {
-      return UserSign(
+      return UserSignEntity(
         id: maps[i]["id"],
         userId: maps[i]['userId'],
         amSignTime: maps[i]['amSignTime'],
@@ -128,7 +128,7 @@ class SignDao {
     });
   }
 
-  Future<void> insertOrUpdateSign(UserSign user) async {
+  Future<void> insertOrUpdateSign(UserSignEntity user) async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     // Insert the Dog into the correct table. Also specify the
@@ -149,7 +149,7 @@ class SignDao {
   }
 
   //此方法存在则不进行更新，用于脚本执行
-  Future<void> insertByScript(UserSign user) async {
+  Future<void> insertByScript(UserSignEntity user) async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     // Insert the Dog into the correct table. Also specify the

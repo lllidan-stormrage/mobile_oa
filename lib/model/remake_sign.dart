@@ -1,14 +1,14 @@
 ///补签到表
-class ReMakeSign {
+class ReMakeSignEntity {
 
   int id;
   int year;
   int month;
   int userId;
   String place;
-  int signTimeStamp; //时间戳
+  String signTimeStamp; //时间戳
 
-  ReMakeSign(
+  ReMakeSignEntity(
       {this.id, this.year, this.month, this.userId, this.place, this.signTimeStamp});
 
   @override

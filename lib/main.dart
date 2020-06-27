@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_splash_screen/flutter_splash_screen.dart';
-import 'package:mobileoa/db/dao/db_script.dart';
+import 'package:mobileoa/db/db_script.dart';
 
 import 'login/app_login.dart';
 

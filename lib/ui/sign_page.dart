@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileoa/db/dao/UserDao.dart';
+import 'package:mobileoa/db/dao/user_dao.dart';
 import 'package:mobileoa/db/dao/sign_dao.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/model/user_sign.dart';
@@ -17,10 +17,10 @@ class SignPage extends StatefulWidget {
 class _SignView extends State<SignPage> {
   String timeStamp = '';
   DateTime date;
-  User mUser = new User();
+  UserEntity mUser = new UserEntity();
   bool isCallTimeState = false; //计时器是否setState
   bool xDispose = false;
-  UserSign userSign = new UserSign();
+  UserSignEntity userSign = new UserSignEntity();
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _SignView extends State<SignPage> {
 
   _getDefaultData() async {
     int id = await AppUtils.getLoginUserId();
-    List<User> user = await UserDao.getInstance().getUserById(id);
+    List<UserEntity> user = await UserDao.getInstance().getUserById(id);
     if (user.isNotEmpty) {
       mUser = user[0];
     }
@@ -41,7 +41,7 @@ class _SignView extends State<SignPage> {
         .getSign(id, date.year, date.month, date.day);
     if (singInfo == null || singInfo.isEmpty) {
       print('111empty');
-      userSign = new UserSign(
+      userSign = new UserSignEntity(
           userId: id,
           year: date.year,
           month: date.month,
@@ -56,7 +56,7 @@ class _SignView extends State<SignPage> {
       userSign = singInfo[0];
     }
     print('aaa${userSign.toString()}');
-    List<UserSign> lists = await SignDao.getInstance().getSignAllByUseId(id);
+    List<UserSignEntity> lists = await SignDao.getInstance().getSignAllByUseId(id);
     print("bbbb${lists.length}");
   }
 
@@ -131,7 +131,7 @@ class _SignView extends State<SignPage> {
                           height: 10,
                           width: 10,
                           decoration: BoxDecoration(
-                              color: Colors.blue,
+                              color: userSign.amIsSign == 1?Colors.blue:Colors.grey,
                               borderRadius: BorderRadius.circular(5)),
                         ),
                       ],

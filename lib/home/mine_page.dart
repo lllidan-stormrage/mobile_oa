@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileoa/db/dao/user_dao.dart';
+import 'package:mobileoa/model/user.dart';
+import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/data_helper.dart';
 import 'package:mobileoa/widget/mine_info_widget.dart';
 
@@ -9,6 +12,21 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePage extends State<MinePage> {
+  UserEntity mUser =new UserEntity();
+
+  @override
+  void initState() {
+    _getData();
+    super.initState();
+  }
+
+  void _getData() async {
+    int userId = await AppUtils.getLoginUserId();
+   var user = await UserDao.getInstance().getUserEntityById(userId);
+    setState(() {
+      mUser = user;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +53,7 @@ class _MinePage extends State<MinePage> {
             Padding(
               padding: EdgeInsets.only(top: 20, bottom: 20),
               child: Text(
-                'admin',
+                '${mUser.name}',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -55,13 +73,14 @@ class _MinePage extends State<MinePage> {
                 textAlign: TextAlign.start,
               ),
             ),
-            ListView.builder(itemBuilder: (context,i){
-
-              return MineInfoView(CommonDataHelper.userTitle[i],"测试");
-            },
-            itemCount: CommonDataHelper.userTitle.length,
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),)
+            Column(
+              children: <Widget>[
+                MineInfoView(CommonDataHelper.userTitle[0], mUser.company),
+                MineInfoView(CommonDataHelper.userTitle[1], mUser.phone),
+                MineInfoView(
+                    CommonDataHelper.userTitle[2], mUser.age.toString()),
+              ],
+            )
           ],
         ),
       ),

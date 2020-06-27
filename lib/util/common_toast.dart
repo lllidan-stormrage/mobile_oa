@@ -13,4 +13,16 @@ class ToastUtils {
       fontSize: 15,
     );
   }
+
+  static void showSuccess(String errorMsg) {
+    Fluttertoast.showToast(
+      msg: errorMsg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+      timeInSecForIosWeb: 1,
+      fontSize: 15,
+    );
+  }
 }

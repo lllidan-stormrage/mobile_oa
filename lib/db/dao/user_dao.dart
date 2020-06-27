@@ -1,5 +1,5 @@
 import 'package:mobileoa/constant.dart';
-import 'package:mobileoa/db/dbUtil.dart';
+import 'package:mobileoa/db/db_util.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -31,17 +31,18 @@ class UserDao {
     return _database;
   }
 
-  Map<String, dynamic> toMap(User user) {
+  Map<String, dynamic> toMap(UserEntity user) {
     return {
       "id": user.id,
       "name": user.name,
       "age": user.age,
       "password": user.password,
       "company": user.company,
+      'phone':user.phone,
     };
   }
 
-  Future<void> updateUser(User user) async {
+  Future<void> updateUser(UserEntity user) async {
     // Get a reference to the database (获得数据库引用)
     final db = await database;
     // Update the given Dog (修改给定的狗狗的数据)
@@ -55,46 +56,67 @@ class UserDao {
     );
   }
 
-  Future<List<User>> getUser(String name, String pass) async {
+  Future<List<UserEntity>> getUser(String name, String pass) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         'select * from $tabName where name= ? and password = ?', [name, pass]);
     return List.generate(maps.length, (i) {
-      return User(
+      return UserEntity(
         id: maps[i]['id'],
         name: maps[i]['name'],
         age: maps[i]['age'],
         sex: maps[i]['sex'],
         password: maps[i]['password'],
         company: maps[i]["company"],
+        phone: maps[i]['phone'],
       );
     });
   }
 
-  Future<List<User>> getUserById(int id) async {
+  Future<List<UserEntity>> getUserById(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.rawQuery('select * from $tabName where id= ?', [id]);
     return List.generate(maps.length, (i) {
-      return User(
+      return UserEntity(
         id: maps[i]['id'],
         name: maps[i]['name'],
         age: maps[i]['age'],
         sex: maps[i]['sex'],
         password: maps[i]['password'],
         company: maps[i]["company"],
+        phone: maps[i]['phone'],
       );
     });
   }
 
-  Future<List<User>> getUsers() async {
+  Future<UserEntity> getUserEntityById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+    await db.rawQuery('select * from $tabName where id= ?', [id]);
+    if(maps.length > 0){
+      return UserEntity(
+        id: maps[0]['id'],
+        name: maps[0]['name'],
+        age: maps[0]['age'],
+        sex: maps[0]['sex'],
+        password: maps[0]['password'],
+        company: maps[0]["company"],
+        phone: maps[0]['phone'],
+      );
+    }
+    return null;
+
+  }
+
+  Future<List<UserEntity>> getUsers() async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     // Query the table for all The Dogs (查询数据表，获取所有的狗狗们)
     final List<Map<String, dynamic>> maps = await db.query(tabName);
     // Convert the List<Map<String, dynamic> into a List<Dog> (将 List<Map<String, dynamic> 转换成 List<Dog> 数据类型)
     return List.generate(maps.length, (i) {
-      return User(
+      return UserEntity(
         id: maps[i]['id'],
         name: maps[i]['name'],
         age: maps[i]['age'],
@@ -118,7 +140,7 @@ class UserDao {
     );
   }
 
-  Future<void> insertUser(User user) async {
+  Future<void> insertUser(UserEntity user) async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     // Insert the Dog into the correct table. Also specify the

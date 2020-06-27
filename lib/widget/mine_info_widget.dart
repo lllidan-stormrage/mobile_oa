@@ -38,7 +38,7 @@ class MineInfoView extends StatelessWidget {
                 padding: EdgeInsets.only(right: 18),
                 child: RichText(
                   text: TextSpan(
-                      text: mHead,
+                      text: mValue,
                       style: TextStyle(color: Color(0xff87898C)),
                       children: [
                         WidgetSpan(

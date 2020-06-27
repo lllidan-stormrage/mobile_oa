@@ -1,3 +1,5 @@
+import 'package:mobileoa/model/month.dart';
+
 class DateUtils {
 
 
@@ -12,6 +14,18 @@ class DateUtils {
   static int getDayInMonth() {
     var date = DateTime.now();
    return getMonthDay(date.year,date.month);
+  }
+
+  //时间转时间戳
+  static int getTimeStamp(Month value ){
+   var dateTime = new DateTime(value.year,value.month,value.day,value.hour,value.minute);
+    return dateTime.millisecondsSinceEpoch;
+  }
+
+  static String getTimeStrByTimeStamp(String timeStamp){
+    int time = int.parse(timeStamp);
+   var mDate = DateTime.fromMillisecondsSinceEpoch(time);
+   return '${mDate.year}/${mDate.month}/${mDate.day} ${mDate.hour}:${mDate.minute}';
   }
 
 

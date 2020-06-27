@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileoa/db/dao/UserDao.dart';
+import 'package:mobileoa/db/dao/user_dao.dart';
 import 'package:mobileoa/home/home_tab_page.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/util/app_util.dart';
@@ -46,7 +46,6 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
           }
         });
       });
-
   }
 
   @override
@@ -159,7 +158,7 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
 
   void _login() async {
     //绑定一个管理员
-    UserDao.getInstance().insertUser(new User(
+    UserDao.getInstance().insertUser(new UserEntity(
         id: 1,
         name: "admin",
         password: "123456",
@@ -169,7 +168,7 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
 
     if (nameController.text.length > 0 && passController.text.length > 0) {
       //db查询
-      List<User> users = await UserDao.getInstance()
+      List<UserEntity> users = await UserDao.getInstance()
           .getUser(nameController.text, passController.text);
 
       if (users.isNotEmpty &&

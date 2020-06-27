@@ -1,4 +1,4 @@
-class UserSign {
+class UserSignEntity {
 
   int id;
   int userId;
@@ -12,7 +12,7 @@ class UserSign {
   int amIsSign; //上午签到
   int pmIsSign; //下午是否签到
 
-  UserSign(
+  UserSignEntity(
       {this.id, this.userId, this.amIsSign, this.pmIsSign, this.amSignTime, this.pmSignTime, this.amSignPlace, this.pmSignPlace,this.year,this.month,this.day});
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileoa/home/homePage.dart';
-import 'package:mobileoa/home/minePage.dart';
+import 'package:mobileoa/home/home_page.dart';
+import 'package:mobileoa/home/mine_page.dart';
 
 /*
 @author Alan_Xiong

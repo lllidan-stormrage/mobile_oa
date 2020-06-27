@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:mobileoa/db/dao/db_script.dart';
+import 'package:mobileoa/db/db_script.dart';
+import 'package:mobileoa/ui/heat_record.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/data_helper.dart';
 import 'package:mobileoa/widget/home_fun_card_widget.dart';
@@ -16,7 +17,6 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initDbExecute();
   }
@@ -24,6 +24,7 @@ class _HomePage extends State<HomePage> {
   void initDbExecute() async {
     int id = await AppUtils.getLoginUserId();
     await DbScript.insertOrUpdateTableSign(id);
+    await DbScript.insertOrUpdateTableMeetingRoom();
   }
 
   @override
@@ -114,7 +115,10 @@ class _HomePage extends State<HomePage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         onPressed: () {
-                          //todo
+                          Navigator.of(context)
+                              .push(new MaterialPageRoute(builder: (_) {
+                            return HeatRecord();
+                          }));
                         },
                       )
                     ],
