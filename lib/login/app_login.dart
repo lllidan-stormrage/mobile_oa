@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobileoa/db/dao/user_dao.dart';
 import 'package:mobileoa/home/home_tab_page.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/common_toast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// app 登陆
 class LoginPage extends StatefulWidget {
@@ -17,6 +19,7 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
   var nameController = new TextEditingController();
   var passController = new TextEditingController();
 
+
   //动画控制器
   AnimationController _controller;
   Animation<double> _animation;
@@ -27,6 +30,10 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    //权限申请
+    permissionRequest();
+
+    // platform.invokeMethod('stopLocation');
     _controller = new AnimationController(
         duration: const Duration(milliseconds: 400), vsync: this);
     _animation = new Tween(begin: begin, end: 1.0).animate(_controller)
@@ -48,6 +55,18 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
       });
   }
 
+  void permissionRequest() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.location,
+      Permission.storage,
+    ].request();
+
+    if (statuses[Permission.location].isPermanentlyDenied ||
+        statuses[Permission.location].isDenied) {
+      ToastUtils.showError("您拒绝了定位权限，请去设置中开启");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,108 +75,107 @@ class _LoginWidget extends State<LoginPage> with TickerProviderStateMixin {
           primaryColor: Colors.white,
           primaryIconTheme: IconThemeData(color: Colors.white, opacity: 0.7)),
       home: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Image(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              image: AssetImage("images/login_bg.jpeg"),
-                fit: BoxFit.cover,
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ClipOval(
-                    child: Image(
-                      image: AssetImage("images/ic_img_avatar.png"),
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
-                    ),
+          body: Stack(
+        children: <Widget>[
+          Image(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            image: AssetImage("images/login_bg.jpeg"),
+            fit: BoxFit.cover,
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ClipOval(
+                  child: Image(
+                    image: AssetImage("images/ic_img_avatar.png"),
+                    width: 90,
+                    height: 90,
+                    fit: BoxFit.cover,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    maxLines: 1,
-                    controller: nameController,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: '请输入用户名',
-                      contentPadding: EdgeInsets.all(10),
-                      icon: Icon(Icons.person),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  maxLines: 1,
+                  controller: nameController,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: '请输入用户名',
+                    contentPadding: EdgeInsets.all(10),
+                    icon: Icon(Icons.person),
 //                  enabledBorder: UnderlineInputBorder(
 //                    borderSide: BorderSide(color: Colors.orange),
 //              ),focusedBorder: UnderlineInputBorder(
 //                borderSide: BorderSide(color: Colors.red),
 //              )
-                    ),
-                    autofocus: false,
-                    cursorColor: Colors.white,
                   ),
-                  TextField(
-                    maxLines: 1,
-                    controller: passController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                        hintText: '请输入密码',
-                        contentPadding: EdgeInsets.all(10),
-                        icon: Icon(Icons.lock)),
-                    style: TextStyle(color: Colors.white),
-                    autofocus: false,
-                    obscureText: true,
-                    cursorColor: Colors.white,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: 200,
-                    height: 40,
-                    child: Stack(
-                      alignment: Alignment(0, 0),
-                      children: <Widget>[
-                        Positioned(
-                          width: 200 - _animation.value * 160,
-                          child: RaisedButton(
-                            child: Text(
-                              _animation.value > begin ? "" : "登陆",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            color: Color.fromRGBO(231, 37, 68, 1),
-                            textColor: Colors.white,
-                            onPressed: () {
-                              _login();
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+                  autofocus: false,
+                  cursorColor: Colors.white,
+                ),
+                TextField(
+                  maxLines: 1,
+                  controller: passController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                      hintText: '请输入密码',
+                      contentPadding: EdgeInsets.all(10),
+                      icon: Icon(Icons.lock)),
+                  style: TextStyle(color: Colors.white),
+                  autofocus: false,
+                  obscureText: true,
+                  cursorColor: Colors.white,
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  width: 200,
+                  height: 40,
+                  child: Stack(
+                    alignment: Alignment(0, 0),
+                    children: <Widget>[
+                      Positioned(
+                        width: 200 - _animation.value * 160,
+                        child: RaisedButton(
+                          child: Text(
+                            _animation.value > begin ? "" : "登陆",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          color: Color.fromRGBO(231, 37, 68, 1),
+                          textColor: Colors.white,
+                          onPressed: () {
+                            _login();
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        Positioned(
-                            child: Offstage(
-                              offstage: _animation.value >= 1.0 ? false : true,
-                              child: Container(
-                                width: 23,
-                                height: 23,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: new AlwaysStoppedAnimation<Color>(
-                                        Colors.white)),
-                              ),
-                            ))
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+                      Positioned(
+                          child: Offstage(
+                        offstage: _animation.value >= 1.0 ? false : true,
+                        child: Container(
+                          width: 23,
+                          height: 23,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Colors.white)),
+                        ),
+                      ))
+                    ],
+                  ),
+                )
+              ],
             ),
-          ],
-        )
-      ),
+          ),
+        ],
+      )),
     );
   }
 

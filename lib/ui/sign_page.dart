@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobileoa/db/dao/user_dao.dart';
 import 'package:mobileoa/db/dao/sign_dao.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/model/user_sign.dart';
 import 'package:mobileoa/util/app_util.dart';
+import 'package:mobileoa/util/common_toast.dart';
 import 'package:mobileoa/util/date_util.dart';
 
 class SignPage extends StatefulWidget {
@@ -22,11 +24,26 @@ class _SignView extends State<SignPage> {
   bool xDispose = false;
   UserSignEntity userSign = new UserSignEntity();
 
+  String mAddress;
+
+  //定位数据通道
+  static const platform = const MethodChannel("bdmap_location_flutter_plugin");
+  static const platform_steam =
+      const EventChannel("bdmap_location_flutter_plugin_stream");
+  StreamSubscription _mLocationSteam;
   @override
   void initState() {
+    _initLocation();
     _getDefaultData();
     _getDate();
     super.initState();
+  }
+
+  _initLocation() {
+    platform.invokeMethod('startLocation');
+    _mLocationSteam = platform_steam.receiveBroadcastStream().listen((event) {
+      mAddress = event;
+    });
   }
 
   _getDefaultData() async {
@@ -56,7 +73,8 @@ class _SignView extends State<SignPage> {
       userSign = singInfo[0];
     }
     print('aaa${userSign.toString()}');
-    List<UserSignEntity> lists = await SignDao.getInstance().getSignAllByUseId(id);
+    List<UserSignEntity> lists =
+        await SignDao.getInstance().getSignAllByUseId(id);
     print("bbbb${lists.length}");
   }
 
@@ -66,7 +84,7 @@ class _SignView extends State<SignPage> {
       appBar: AppBar(
         title: Text(
           mUser.company != null ? mUser.company : "",
-          style: TextStyle(fontSize: 16,color: Colors.black87),
+          style: TextStyle(fontSize: 16, color: Colors.black87),
         ),
         iconTheme: IconThemeData(
           color: Colors.black87, //修改颜色
@@ -76,6 +94,7 @@ class _SignView extends State<SignPage> {
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
+        color: Colors.white,
         child: Column(
           children: <Widget>[
             Row(
@@ -114,7 +133,7 @@ class _SignView extends State<SignPage> {
               padding: EdgeInsets.only(top: 15),
               child: Divider(
                 height: 1,
-                color: Colors.blueGrey,
+                color: Colors.black26,
               ),
             ),
             Container(
@@ -136,7 +155,11 @@ class _SignView extends State<SignPage> {
                           height: 10,
                           width: 10,
                           decoration: BoxDecoration(
-                              color: userSign.amIsSign == 1?Colors.blue:Colors.grey,
+                              color: userSign.amIsSign == 1
+                                  ? userSign.pmIsSign == 1
+                                      ? Colors.grey
+                                      : Colors.blue
+                                  : Colors.blue,
                               borderRadius: BorderRadius.circular(5)),
                         ),
                       ],
@@ -213,7 +236,7 @@ class _SignView extends State<SignPage> {
                       color: Colors.green,
                     ),
                     Text(
-                      location == null ? "测试地址" : location,
+                      location == null ? "定位中..." : location,
                       style: TextStyle(color: Color(0xff87898C), fontSize: 14),
                     )
                   ],
@@ -257,18 +280,22 @@ class _SignView extends State<SignPage> {
       ),
       onTap: () {
         setState(() {
-          if (userSign.amIsSign == 0) {
-            //上午签到
-            userSign.amSignTime = timeStamp;
-            userSign.amSignPlace = "上海东方体育中心";
-            userSign.amIsSign = 1;
+          if (mAddress != null && mAddress.length > 0) {
+            if (userSign.amIsSign == 0) {
+              //上午签到
+              userSign.amSignTime = timeStamp;
+              userSign.amSignPlace = mAddress;
+              userSign.amIsSign = 1;
+            } else {
+              //下午签到
+              userSign.pmSignTime = timeStamp;
+              userSign.pmSignPlace = mAddress;
+              userSign.pmIsSign = 1;
+            }
+            SignDao.getInstance().insertOrUpdateSign(userSign);
           } else {
-            //下午签到
-            userSign.pmSignTime = timeStamp;
-            userSign.pmSignPlace = "上海东方体育中心";
-            userSign.pmIsSign = 1;
+            ToastUtils.showError("定位中，请稍后");
           }
-          SignDao.getInstance().insertOrUpdateSign(userSign);
         });
       },
     );
@@ -297,6 +324,8 @@ class _SignView extends State<SignPage> {
   @override
   void dispose() {
     xDispose = true;
+    _mLocationSteam?.cancel();
+    _mLocationSteam = null;
     super.dispose();
   }
 }
