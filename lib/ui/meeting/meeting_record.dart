@@ -36,8 +36,13 @@ class _RecordView extends State<MeetingRecord> {
         appBar: AppBar(
           title: Text(
             "本月我的会议记录",
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16,color: Colors.black87),
           ),
+          iconTheme: IconThemeData(
+            color: Colors.black87, //修改颜色
+          ),
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
         ),
         body: ListView.builder(
             itemCount: isEmpty ? 1 : mData.length,

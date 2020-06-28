@@ -36,8 +36,13 @@ class _ListPage extends State<HeatList> {
       appBar: AppBar(
         title: Text(
           '我的体温记录',
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16,color: Colors.black87),
         ),
+        iconTheme: IconThemeData(
+          color: Colors.black87, //修改颜色
+        ),
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
       ),
       body: ListView.builder(
           itemCount: isEmpty ? 1 : mData.length,

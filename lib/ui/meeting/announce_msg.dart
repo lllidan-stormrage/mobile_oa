@@ -28,10 +28,16 @@ class _AnnounceView extends State<AnnounceMsgPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black87, //修改颜色
+        ),
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
         title: Text(
           "公告",
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16,color: Colors.black87),
         ),
+
       ),
       body: ListView.builder(
           physics: BouncingScrollPhysics(),

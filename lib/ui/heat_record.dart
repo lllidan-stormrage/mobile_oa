@@ -19,8 +19,14 @@ class HeatRecord extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "体温登记 ${nowTime.month}/${nowTime.day}",
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16,color:Colors.black87),
+
         ),
+        iconTheme: IconThemeData(
+          color: Colors.black87, //修改颜色
+        ),
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
             icon: Icon(

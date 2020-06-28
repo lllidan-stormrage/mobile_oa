@@ -31,6 +31,11 @@ class _MinePage extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
@@ -39,7 +44,7 @@ class _MinePage extends State<MinePage> {
           children: <Widget>[
             GestureDetector(
               child: Padding(
-                padding: EdgeInsets.only(top: 50),
+                padding: EdgeInsets.only(top: 40),
                 child: CircleAvatar(
                   radius: 44,
                   backgroundColor: Colors.transparent,

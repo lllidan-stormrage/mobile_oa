@@ -58,8 +58,14 @@ class _SignRecordView extends State<SignRecord> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("我的签到记录", style: TextStyle(fontSize: 16)),
+        title: Text("我的签到记录", style: TextStyle(fontSize: 16,color: Colors.black87)),
+        iconTheme: IconThemeData(
+          color: Colors.black87, //修改颜色
+        ),
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
       ),
+
       body: Container(
         child: ListView.builder(
           physics: BouncingScrollPhysics(),

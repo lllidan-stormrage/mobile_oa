@@ -66,8 +66,13 @@ class _SignView extends State<SignPage> {
       appBar: AppBar(
         title: Text(
           mUser.company != null ? mUser.company : "",
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16,color: Colors.black87),
         ),
+        iconTheme: IconThemeData(
+          color: Colors.black87, //修改颜色
+        ),
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

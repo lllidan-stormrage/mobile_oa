@@ -32,8 +32,13 @@ class _MeetingTablePage extends State<MeetingHome> {
         appBar: AppBar(
           title: Text(
             "会议预定",
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16,color: Colors.black87),
           ),
+          iconTheme: IconThemeData(
+            color: Colors.black87, //修改颜色
+          ),
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
         ),
         body: Container(
           padding: EdgeInsets.all(15),
@@ -65,7 +70,10 @@ class _MeetingTablePage extends State<MeetingHome> {
         );
       },
       child: Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: Colors.white,
+        ),
         child: Stack(
           alignment: Alignment(0, 0),
           children: <Widget>[

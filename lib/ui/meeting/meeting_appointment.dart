@@ -61,8 +61,13 @@ class _AppointmentView extends State<MeetingAppointment> {
         appBar: AppBar(
           title: Text(
             roomName,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16,color: Colors.black87),
           ),
+          iconTheme: IconThemeData(
+            color: Colors.black87, //修改颜色
+          ),
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
         ),
         body: ListView(
           scrollDirection: Axis.vertical,

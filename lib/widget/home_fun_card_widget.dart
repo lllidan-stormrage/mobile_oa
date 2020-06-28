@@ -38,7 +38,7 @@ class HomeFunCardView extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
-                      color: Colors.lightBlue),
+                      color: Colors.black87),
                 ),
               ),
               Positioned(

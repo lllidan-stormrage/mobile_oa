@@ -50,8 +50,13 @@ class _RemakeView extends State<SignRemake> {
       appBar: AppBar(
         title: Text(
           "补卡申请",
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: Colors.black87),
         ),
+        iconTheme: IconThemeData(
+          color: Colors.black87, //修改颜色
+        ),
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
       ),
       body: Container(
         color: Color(0xffF5F5F5),
@@ -71,24 +76,23 @@ class _RemakeView extends State<SignRemake> {
               height: 40,
             ),
             GestureDetector(
-                onTap: () {
-                  _submit();
-                },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 45,
-                    margin: EdgeInsets.only(left: 15, right: 15),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Center(
-                      child: Text(
-                        "提交",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+              onTap: () {
+                _submit();
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45,
+                margin: EdgeInsets.only(left: 15, right: 15),
+                decoration: BoxDecoration(
+                    color: Colors.blue, borderRadius: BorderRadius.circular(6)),
+                child: Center(
+                  child: Text(
+                    "提交",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
+                ),
+              ),
             )
           ]),
         ),

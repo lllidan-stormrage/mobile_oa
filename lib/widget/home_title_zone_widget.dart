@@ -21,7 +21,7 @@ class HomeTitleZoneView extends StatelessWidget {
             height: 12,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color: Colors.blue,
+              color: Colors.black87,
             ),
           ),
           SizedBox(

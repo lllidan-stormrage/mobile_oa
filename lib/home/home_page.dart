@@ -34,11 +34,13 @@ class _HomePage extends State<HomePage> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              brightness: Brightness.light,
+              backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
               pinned: true,
               expandedHeight: 200,
               forceElevated: innerBoxIsScrolled,
-              title: Text("welcome"),
+              title: Text("welcome",style: TextStyle(fontSize: 17,color: Colors.black87),),
               centerTitle: true,
               flexibleSpace: FlexibleSpaceBar(
                 background:
