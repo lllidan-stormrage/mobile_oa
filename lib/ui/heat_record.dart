@@ -31,7 +31,7 @@ class HeatRecord extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.receipt,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               Navigator.of(context).push(new MaterialPageRoute(builder: (_) {

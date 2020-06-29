@@ -31,6 +31,7 @@ class _SignView extends State<SignPage> {
   static const platform_steam =
       const EventChannel("bdmap_location_flutter_plugin_stream");
   StreamSubscription _mLocationSteam;
+
   @override
   void initState() {
     _initLocation();
@@ -218,7 +219,7 @@ class _SignView extends State<SignPage> {
           Container(
             padding: EdgeInsets.only(top: 2),
             width: visible ? 300 : 0.0,
-            height: visible ? 60 : 0.0,
+            height: visible ? 65 : 0.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -229,17 +230,29 @@ class _SignView extends State<SignPage> {
                 SizedBox(
                   height: 2,
                 ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.green,
+                Expanded(
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.green,
+                        ),
+                        Expanded(
+                          child: Wrap(
+                            children: <Widget>[
+                              Text(
+                                location == null ? "定位中..." : location,
+                                maxLines: 3,
+                                style: TextStyle(
+                                    color: Color(0xff87898C), fontSize: 14),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                    Text(
-                      location == null ? "定位中..." : location,
-                      style: TextStyle(color: Color(0xff87898C), fontSize: 14),
-                    )
-                  ],
+                  )
                 )
               ],
             ),

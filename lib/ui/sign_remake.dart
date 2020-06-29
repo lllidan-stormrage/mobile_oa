@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +21,21 @@ class _RemakeView extends State<SignRemake> {
   Month mSelectTime = new Month(year: 0, month: 0);
   int mUserId; //用户id;
   int useCount = 0; //使用的数量
+  String mAddress;
+
+  //定位数据通道
+  static const platform = const MethodChannel("bdmap_location_flutter_plugin");
+  static const platform_steam =
+  const EventChannel("bdmap_location_flutter_plugin_stream");
+  StreamSubscription _mLocationSteam;
 
   @override
   void initState() {
     super.initState();
+    platform.invokeMethod('startLocation');
+    _mLocationSteam = platform_steam.receiveBroadcastStream().listen((event) {
+      mAddress = event;
+    });
     _getData();
   }
 
@@ -201,7 +214,7 @@ class _RemakeView extends State<SignRemake> {
         year: mSelectTime.year,
         month: mSelectTime.month,
         userId: mUserId,
-        place: "华东理工大学");
+        place: "$mAddress");
 
     sign.signTimeStamp = DateUtils.getTimeStamp(mSelectTime).toString();
     int value = await RemakeSignDao.getInstance().insertOrUpdateSign(sign);
@@ -247,5 +260,13 @@ class _RemakeView extends State<SignRemake> {
       //取消选择。重置
       mSelectTime = new Month();
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _mLocationSteam?.cancel();
+    _mLocationSteam = null;
   }
 }
