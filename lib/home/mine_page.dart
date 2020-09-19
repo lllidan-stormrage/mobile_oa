@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobileoa/db/dao/user_dao.dart';
 import 'package:mobileoa/model/user.dart';
 import 'package:mobileoa/util/app_util.dart';
@@ -13,6 +16,14 @@ class MinePage extends StatefulWidget {
 
 class _MinePage extends State<MinePage> {
   UserEntity mUser =new UserEntity();
+  File imagePath = null;
+
+  Future getImage() async{
+    final pickFile = await ImagePicker().getImage(source: ImageSource.camera);
+    setState(() {
+      imagePath = File(pickFile.path);
+    });
+  }
 
   @override
   void initState() {
@@ -48,11 +59,11 @@ class _MinePage extends State<MinePage> {
                 child: CircleAvatar(
                   radius: 44,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage("images/ic_img_avatar.png"),
+                  backgroundImage: imagePath == null ? AssetImage("images/ic_img_avatar.png"):imagePath,
                 ),
               ),
               onTap: () {
-                _showSelectPhoto(context);
+                getImage();
               },
             ),
             Padding(
@@ -92,7 +103,5 @@ class _MinePage extends State<MinePage> {
     );
   }
 
-  _showSelectPhoto(BuildContext context) {
-    //todo
-  }
+
 }

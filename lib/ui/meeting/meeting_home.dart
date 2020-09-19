@@ -111,9 +111,9 @@ class _MeetingTablePage extends State<MeetingHome> {
               left: 10,
               child: Transform(
                 child: Text(
-                  room.name,
-                  style: TextStyle(fontSize: 20, color: Color(0xfff5f5f5)),
-                ),
+                room.name,
+                style: TextStyle(fontSize: 20, color: Color(0xfff5f5f5)),
+              ),
                 transform: Matrix4.rotationZ(0.3),
               ),
             ),

@@ -27,6 +27,9 @@ class DateUtils {
    var mDate = DateTime.fromMillisecondsSinceEpoch(time);
    return '${mDate.year}/${mDate.month}/${mDate.day} ${mDate.hour}:${mDate.minute}';
   }
+  static String getTimeStrByTimeStampByTime(int year ,int month,int day){
+    return '${year}/${month}/${day}';
+  }
 
 
   //不晓得怎么获取一个月的时间，就先写死吧

@@ -53,5 +53,7 @@ class DbHelperInstance {
         'appointUseId INTEGER,meetingTitle TEXT,meetingDesc TEXT,appointUserName TEXT,roomName TEXT)');
     await db.execute(
         'CREATE TABLE ${Constant.tableHeat} (id INTEGER PRIMARY KEY,year INTEGER,month INTEGER,day INTEGER,userId INTEGER,amHeat FLOAT,pmHeat FLOAT,createTime TEXT,state INTEGER)');
+    await db.execute(
+        'CREATE TABLE ${Constant.tableMemo}(id INTEGER PRIMARY KEY,year INTEGER,month INTEGER,day INTEGER,userId INTEGER,title TEXT,desc TEXT,isOver INTEGER)');
   }
 }

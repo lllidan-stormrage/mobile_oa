@@ -40,7 +40,10 @@ class _HomePage extends State<HomePage> {
               pinned: true,
               expandedHeight: 200,
               forceElevated: innerBoxIsScrolled,
-              title: Text("welcome",style: TextStyle(fontSize: 17,color: Colors.black87),),
+              title: Text(
+                "welcome",
+                style: TextStyle(fontSize: 17, color: Colors.black87),
+              ),
               centerTitle: true,
               flexibleSpace: FlexibleSpaceBar(
                 background:
@@ -91,7 +94,7 @@ class _HomePage extends State<HomePage> {
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6)),
-                margin: EdgeInsets.all(25),
+                margin: EdgeInsets.fromLTRB(25, 25, 25, 10),
                 child: Container(
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
@@ -126,6 +129,18 @@ class _HomePage extends State<HomePage> {
                     ],
                   ),
                 ),
+              ),
+              HomeTitleZoneView("备忘录管理"),
+              Container(
+                height: 120,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: CommonDataHelper.memo.length,
+                    itemBuilder: (context, i) {
+                      return HomeFunCardView(CommonDataHelper.memo[i], i, 2);
+                    }),
               ),
             ],
           ),

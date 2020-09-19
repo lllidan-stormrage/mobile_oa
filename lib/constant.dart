@@ -6,6 +6,7 @@ class Constant {
   static String tableMeetingRoom = "TableMeetingRoom";
   static String tableAppointment = "TableAppointment";
   static String tableHeat = "TableHeat";
+  static String tableMemo = "TableMemo";
 
   //sp
   static String spLoginUserId = "sp_loginuser_id";

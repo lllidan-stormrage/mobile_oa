@@ -5,6 +5,7 @@ import 'package:mobileoa/ui/meeting/announce_msg.dart';
 class CommonDataHelper {
   static final agenda = ["签到打卡", "考勤统计", "补卡申请"];
   static final meeting = ["会议室预定", "会议记录", "公告"];
+  static final memo = ["待办事项"];
 
   static final userTitle = ["公司", "电话", "年龄"];
 

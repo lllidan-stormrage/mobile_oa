@@ -81,7 +81,7 @@ class DbScript {
     var date = DateTime.now();
     int day = DateUtils.getMonthDay(date.year, date.month);
     for (int i = 1; i <= day; i++) {
-      await SignDao.getInstance().insertOrUpdateSign(new UserSignEntity(
+      await SignDao.getInstance().insertByScript(new UserSignEntity(
           userId: userId,
           year: date.year,
           month: date.month,

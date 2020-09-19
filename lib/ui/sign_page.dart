@@ -148,7 +148,9 @@ class _SignView extends State<SignPage> {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                              color: Colors.grey,
+                              color: userSign.amIsSign == 1
+                                  ? Colors.grey
+                                  : Colors.blue,
                               borderRadius: BorderRadius.circular(5)),
                         ),
                         _buildLine(true),
@@ -231,29 +233,28 @@ class _SignView extends State<SignPage> {
                   height: 2,
                 ),
                 Expanded(
-                  child: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.location_on,
-                          color: Colors.green,
+                    child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.location_on,
+                        color: Colors.green,
+                      ),
+                      Expanded(
+                        child: Wrap(
+                          children: <Widget>[
+                            Text(
+                              location == null ? "定位中..." : location,
+                              maxLines: 3,
+                              style: TextStyle(
+                                  color: Color(0xff87898C), fontSize: 14),
+                            )
+                          ],
                         ),
-                        Expanded(
-                          child: Wrap(
-                            children: <Widget>[
-                              Text(
-                                location == null ? "定位中..." : location,
-                                maxLines: 3,
-                                style: TextStyle(
-                                    color: Color(0xff87898C), fontSize: 14),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                )
+                      )
+                    ],
+                  ),
+                ))
               ],
             ),
           )

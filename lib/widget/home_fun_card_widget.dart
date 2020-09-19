@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobileoa/db/dao/meeting_room_dao.dart';
+import 'package:mobileoa/ui/calender/home_calender.dart';
 import 'package:mobileoa/ui/meeting/announce_msg.dart';
 import 'package:mobileoa/ui/meeting/meeting_home.dart';
 import 'package:mobileoa/ui/meeting/meeting_record.dart';
+import 'package:mobileoa/ui/memo/memo_page.dart';
 import 'package:mobileoa/ui/sign_page.dart';
 import 'package:mobileoa/ui/sign_record.dart';
 import 'package:mobileoa/ui/sign_remake.dart';
-import 'package:mobileoa/util/common_toast.dart';
 
 class HomeFunCardView extends StatelessWidget {
   final String mTitle;
@@ -82,6 +82,19 @@ class HomeFunCardView extends StatelessWidget {
               return AnnounceMsgPage();
             }));
           }
+        } else if (type == 2) {
+//          if (index == 0) {
+//            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+//              return BlueStylePage();
+//            }));
+//          } else if (index == 1) {
+//            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+//              return MemoPage();
+//            }));
+//          }
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+            return MemoPage();
+          }));
         }
       },
     );
