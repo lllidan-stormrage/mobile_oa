@@ -31,23 +31,6 @@ class AppointmentDao {
     return _database;
   }
 
-  Map<String, dynamic> toMap(MeetingAppointmentEntity appoint) {
-    return {
-      "id": appoint.id,
-      "appointUseId": appoint.appointUseId,
-      "year": appoint.year,
-      "day": appoint.day,
-      "month": appoint.month,
-      "startTime": appoint.startTime,
-      "endTime": appoint.endTime,
-      "meetingTitle": appoint.meetingTitle,
-      "meetingDesc": appoint.meetingDesc,
-      "roomId": appoint.roomId,
-      'appointUserName': appoint.appointUserName,
-      'roomName': appoint.roomName,
-    };
-  }
-
   Future<List<MeetingAppointmentEntity>> getAppointmentsByMonth(
       int year, int month, int userId) async {
     final db = await database;
@@ -68,24 +51,38 @@ class AppointmentDao {
         roomId: maps[i]["roomId"],
         appointUserName: maps[i]['appointUserName'],
         roomName: maps[i]['roomName'],
+        state: maps[i]["state"],
       );
     });
   }
 
   Future<List<MeetingAppointmentEntity>> getAppointments(
       int year, int month, int day, int roomId,
-      {int userId}) async {
+      {int userId, int state}) async {
     final db = await database;
     List<Map<String, dynamic>> maps;
     if (userId != null) {
-      maps = await db.rawQuery(
-          'select * from $tabName where year = ? and month = ? and day = ? and roomId = ? and appointUseId = ?',
-          [year, month, day, roomId, userId]);
+      if (state != null) {
+        maps = await db.rawQuery(
+            'select * from $tabName where year = ? and month = ? and day = ? and roomId = ? and appointUseId = ? and state = ?',
+            [year, month, day, roomId, userId, state]);
+      } else {
+        maps = await db.rawQuery(
+            'select * from $tabName where year = ? and month = ? and day = ? and roomId = ? and appointUseId = ?',
+            [year, month, day, roomId, userId]);
+      }
     } else {
-      maps = await db.rawQuery(
-          'select * from $tabName where year = ? and month = ? and day = ? and roomId = ?',
-          [year, month, day, roomId]);
+      if (state != null) {
+        maps = await db.rawQuery(
+            'select * from $tabName where year = ? and month = ? and day = ? and roomId = ? and state = ?',
+            [year, month, day, roomId, state]);
+      } else {
+        maps = await db.rawQuery(
+            'select * from $tabName where year = ? and month = ? and day = ? and roomId = ?',
+            [year, month, day, roomId]);
+      }
     }
+
     return List.generate(maps.length, (i) {
       return MeetingAppointmentEntity(
         id: maps[i]["id"],
@@ -100,12 +97,12 @@ class AppointmentDao {
         roomId: maps[i]["roomId"],
         appointUserName: maps[i]['appointUserName'],
         roomName: maps[i]['roomName'],
+        state: maps[i]["state"],
       );
     });
   }
 
-  Future<int> insertOrUpdateAppointment(
-      MeetingAppointmentEntity appointment) async {
+  Future<int> insertAppointment(MeetingAppointmentEntity appointment) async {
     // Get a reference to the database (获得数据库引用)
     final Database db = await database;
     //判断会议此期间是否被使用
@@ -125,9 +122,42 @@ class AppointmentDao {
     }
     await db.insert(
       tabName,
-      toMap(appointment),
+      appointment.toMap(appointment),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     return 0;
+  }
+
+  Future<int> updateAppointment(MeetingAppointmentEntity data) async {
+    final db = await database;
+    return await db.update(tabName, data.toMap(data),
+        where: 'id = ?', whereArgs: [data.id]);
+  }
+
+  Future<int> deleteAppointment(int id) async {
+    final db = await database;
+    return await db.delete(tabName, where: 'id = ?', whereArgs: [id]);
+  }
+
+  //获取会议室状态
+  Future<int> getRoomStateByRoomId(int roomId) async {
+    var time = DateTime.now();
+    List<MeetingAppointmentEntity> datas = await getAppointments(
+        time.year, time.month, time.day, roomId,
+        state: 0);
+
+    if (datas != null && datas.length > 0) {
+      for (int i = 0; i < datas.length; i++) {
+        if (Comparable.compare(int.parse(datas[i].startTime),
+                    time.millisecondsSinceEpoch) <=
+                0 &&
+            Comparable.compare(
+                    int.parse(datas[i].endTime), time.millisecondsSinceEpoch) >=
+                0) {
+          return 2; //使用中
+        }
+      }
+    }
+    return 1;
   }
 }

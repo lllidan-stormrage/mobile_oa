@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileoa/db/dao/heat_dao.dart';
 import 'package:mobileoa/model/heat_entity.dart';
-import 'package:mobileoa/ui/heat_list.dart';
+import 'package:mobileoa/ui/heat/heat_list.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/common_toast.dart';
 
@@ -30,7 +30,7 @@ class HeatRecord extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              Icons.receipt,
+              Icons.add,
               color: Colors.black,
             ),
             onPressed: () {

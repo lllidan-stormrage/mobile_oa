@@ -1,4 +1,5 @@
 import 'package:mobileoa/constant.dart';
+import 'package:mobileoa/db/dao/appoint_dao.dart';
 import 'package:mobileoa/db/db_util.dart';
 import 'package:mobileoa/model/meeting_room.dart';
 import 'package:mobileoa/model/user_sign.dart';
@@ -55,16 +56,23 @@ class MeetingRoomDao {
 
   Future<List<MeetingRoomEntity>> getRooms() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tabName,orderBy: "floor DESC");
-    return List.generate(maps.length, (i) {
+    final List<Map<String, dynamic>> maps =
+        await db.query(tabName, orderBy: "floor DESC");
+
+    List<MeetingRoomEntity> datas = List.generate(maps.length, (i) {
       return MeetingRoomEntity(
         id: maps[i]["id"],
         name: maps[i]["name"],
         floor: maps[i]['floor'],
       );
     });
+    for (int i = 0; i < datas.length; i++) {
+      int state = await AppointmentDao.getInstance()
+          .getRoomStateByRoomId(int.parse(maps[i]["id"].toString()));
+      datas[i].state = state;
+    }
+    return datas;
   }
-
 
   //此方法存在则不进行更新，用于脚本执行
   Future<int> insertByScript(MeetingRoomEntity roomEntity) async {

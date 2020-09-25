@@ -13,4 +13,8 @@ class Constant {
 
   //系统补卡次数
   static int remakeSignTimeCount = 5;
+
+  static int offWorkTime = 18;
+  static int onWorkTime = 9;
+
 }

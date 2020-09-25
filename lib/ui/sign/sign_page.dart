@@ -11,6 +11,8 @@ import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/common_toast.dart';
 import 'package:mobileoa/util/date_util.dart';
 
+import '../../constant.dart';
+
 class SignPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _SignView();
@@ -174,7 +176,7 @@ class _SignView extends State<SignPage> {
                             padding: EdgeInsets.only(left: 20),
                             child: _buildSign(
                                 userSign.amIsSign == 1 ? true : false,
-                                "上班时间 9：00",
+                                "上班时间 ${Constant.onWorkTime}：00",
                                 time: userSign.amSignTime,
                                 location: userSign.amSignPlace)),
                         SizedBox(
@@ -184,7 +186,7 @@ class _SignView extends State<SignPage> {
                           padding: EdgeInsets.only(left: 20),
                           child: _buildSign(
                               userSign.pmIsSign == 1 ? true : false,
-                              "下班时间 18：00",
+                              "下班时间 ${Constant.offWorkTime}：00",
                               time: userSign.pmSignTime,
                               location: userSign.pmSignPlace),
                         )
@@ -280,7 +282,7 @@ class _SignView extends State<SignPage> {
             Positioned(
               top: 37,
               child: Text(
-                userSign.amIsSign == 0 ? "上班打卡" : "下班打卡",
+                getBtnStr(),
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
@@ -295,17 +297,36 @@ class _SignView extends State<SignPage> {
       onTap: () {
         setState(() {
           if (mAddress != null && mAddress.length > 0) {
-            if (userSign.amIsSign == 0) {
-              //上午签到
-              userSign.amSignTime = timeStamp;
-              userSign.amSignPlace = mAddress;
-              userSign.amIsSign = 1;
-            } else {
+            //12点之后下午签到
+            int nowTime = int.parse(timeStamp.substring(0, 2));
+            if (nowTime >= 12) {
+              if (userSign.amIsSign == 0) {
+                userSign.amIsSign = 2; //漏卡
+              }
               //下午签到
-              userSign.pmSignTime = timeStamp;
-              userSign.pmSignPlace = mAddress;
-              userSign.pmIsSign = 1;
+              if (nowTime > Constant.offWorkTime) {
+                offWorkSign();
+              } else {
+                _showLateOrEarlyLeaveDialog(1, "还未到下班时间，是否继续打卡");
+              }
+            } else {
+              if (userSign.amIsSign == 0) {
+                //上午签到
+                if (nowTime < Constant.onWorkTime) {
+                  workSign();
+                } else {
+                  _showLateOrEarlyLeaveDialog(0, "您已经迟到了，是否继续打卡？");
+                }
+              } else {
+                //下午签到
+                if (nowTime > Constant.offWorkTime) {
+                  offWorkSign();
+                } else {
+                  _showLateOrEarlyLeaveDialog(1, "还未到下班时间，是否继续打卡");
+                }
+              }
             }
+
             SignDao.getInstance().insertOrUpdateSign(userSign);
           } else {
             ToastUtils.showError("定位中，请稍后");
@@ -341,5 +362,72 @@ class _SignView extends State<SignPage> {
     _mLocationSteam?.cancel();
     _mLocationSteam = null;
     super.dispose();
+  }
+
+  Future<void> _showLateOrEarlyLeaveDialog(int type, String desc) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('打卡提醒'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(desc),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('确定'),
+              onPressed: () {
+                //签到
+                if (type == 0) {
+                  workSign();
+                } else {
+                  offWorkSign();
+                }
+
+                SignDao.getInstance().insertOrUpdateSign(userSign);
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String getBtnStr() {
+    int nowTime = int.parse(timeStamp.substring(0, 2));
+    if (nowTime < 12) {
+      if (userSign.amIsSign == 0) {
+        return "上班签到";
+      }
+    } else {
+      if (userSign.pmIsSign == 1) {
+        return "更新";
+      }
+    }
+    return "下班签到";
+  }
+
+  void workSign() {
+    userSign.amSignTime = timeStamp;
+    userSign.amSignPlace = mAddress;
+    userSign.amIsSign = 1;
+  }
+
+  void offWorkSign() {
+    userSign.pmSignTime = timeStamp;
+    userSign.pmSignPlace = mAddress;
+    userSign.pmIsSign = 1;
   }
 }

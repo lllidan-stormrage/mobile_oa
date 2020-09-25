@@ -4,6 +4,8 @@ class MeetingRoomEntity {
   String name; //名称
   int floor; //楼层
 
+  int state;
+
   MeetingRoomEntity({this.id, this.name, this.floor});
 
   @override

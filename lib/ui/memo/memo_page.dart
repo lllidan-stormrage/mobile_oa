@@ -78,13 +78,17 @@ class _MemoPage extends State<MemoPage> {
     );
   }
 
-  void _toAddPage({bool mark = false, MemoEntity data}) {
-    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+  void _toAddPage({bool mark = false, MemoEntity data}) async {
+    bool result =
+        await Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
       return AddMemoPage(
         showMark: mark,
         mData: data,
       );
     }));
+    if (result != null && result) {
+      _getData();
+    }
   }
 
   Widget _buildMsg(MemoEntity data) {
@@ -102,10 +106,7 @@ class _MemoPage extends State<MemoPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.only(left: 10, top: 8, bottom: 8),
                   decoration: BoxDecoration(
                       color: Color(0xfff5f5f5),
@@ -128,8 +129,7 @@ class _MemoPage extends State<MemoPage> {
                       Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: Text(
-                            '${DateUtils.getTimeStrByTimeStampByTime(data.year,
-                                data.month, data.day)}'),
+                            '${DateUtils.getTimeStrByTimeStampByTime(data.year, data.month, data.day)}'),
                       )
                     ],
                   ),
@@ -157,14 +157,13 @@ class _MemoPage extends State<MemoPage> {
                 top: 40,
                 right: 20,
                 child: Transform(
-                    transform: Matrix4.rotationZ(-0.3),
-                    child: Image.asset(
-                      "images/icon_done.png",
-                      width: data.isOver == 0 ? 0 : 50,
-                      height: data.isOver == 0 ? 0 : 50,
-                    ),
-                )
-            ),
+                  transform: Matrix4.rotationZ(-0.3),
+                  child: Image.asset(
+                    "images/icon_done.png",
+                    width: data.isOver == 0 ? 0 : 50,
+                    height: data.isOver == 0 ? 0 : 50,
+                  ),
+                )),
           ],
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:mobileoa/db/db_script.dart';
-import 'package:mobileoa/ui/heat_record.dart';
+import 'package:mobileoa/ui/heat/heat_record.dart';
 import 'package:mobileoa/util/app_util.dart';
 import 'package:mobileoa/util/data_helper.dart';
 import 'package:mobileoa/widget/home_fun_card_widget.dart';

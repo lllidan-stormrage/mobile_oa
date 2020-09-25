@@ -91,6 +91,24 @@ class SignDao {
         'select * from $tabName where userId= ? and year = ? and month = ? and (amIsSign = ? or pmIsSign = ?)order by id DESC',
         [useId, year, month, 1, 1]);
     return List.generate(maps.length, (i) {
+      bool early = false;
+      bool late = false;
+      if (maps[i]['pmIsSign'] == 1) {
+        String pmTime = maps[i]['pmSignTime'];
+        if (int.parse(pmTime.substring(0,2).toString()) <
+            Constant.offWorkTime) {
+          early = true;
+        }
+      }
+
+      if (maps[i]['amIsSign'] == 1) {
+        String pmTime = maps[i]['amSignTime'];
+        if (int.parse(pmTime.substring(0, 2).toString()) >=
+            Constant.onWorkTime) {
+          late = true;
+        }
+      }
+
       return UserSignEntity(
         id: maps[i]["id"],
         userId: maps[i]['userId'],
@@ -103,6 +121,8 @@ class SignDao {
         day: maps[i]['day'],
         amIsSign: maps[i]['amIsSign'],
         pmIsSign: maps[i]['pmIsSign'],
+        leaveWorkEarly: early,
+        workLate: late,
       );
     });
   }

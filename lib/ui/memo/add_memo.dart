@@ -173,7 +173,7 @@ class _MemoAdd extends State<AddMemoPage> {
     data.isOver = 0;
     data.day = time.day;
     await MemoDao.getInstance().insert(data);
-    Navigator.pop(context);
+    Navigator.pop(context,true);
   }
 
   void updateState() async {

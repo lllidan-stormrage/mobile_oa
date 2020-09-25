@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobileoa/db/dao/appoint_dao.dart';
 import 'package:mobileoa/db/dao/meeting_room_dao.dart';
 import 'package:mobileoa/model/meeting_room.dart';
 import 'package:mobileoa/ui/meeting/meeting_appointment.dart';
@@ -21,7 +22,9 @@ class _MeetingTablePage extends State<MeetingHome> {
 
   void _getDefaultData() async {
     mRooms = await MeetingRoomDao.getInstance().getRooms();
+
     setState(() {
+
       hasRooms = mRooms.isNotEmpty;
     });
   }
@@ -140,6 +143,17 @@ class _MeetingTablePage extends State<MeetingHome> {
               child: Text(
                 "楼层：${room.floor}楼",
                 style: TextStyle(fontSize: 16),
+              ),
+            ),
+
+            Positioned(
+              top: 75,
+              child: Visibility(
+                visible: room.state == 2,
+                child: Text(
+                  "使用中",
+                  style: TextStyle(fontSize: 16,color: Colors.orange),
+                ),
               ),
             ),
           ],

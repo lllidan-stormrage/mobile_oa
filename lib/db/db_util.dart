@@ -50,7 +50,7 @@ class DbHelperInstance {
         'CREATE TABLE ${Constant.tableMeetingRoom}(id INTEGER PRIMARY KEY,floor INTEGER,name TEXT)');
     await db.execute(
         'CREATE TABLE ${Constant.tableAppointment}(id INTEGER PRIMARY KEY,floor INTEGER,year INTEGER,month INTEGER,day INTEGER,roomId INTEGER,startTime TEXT,endTime TEXT,'
-        'appointUseId INTEGER,meetingTitle TEXT,meetingDesc TEXT,appointUserName TEXT,roomName TEXT)');
+        'appointUseId INTEGER,meetingTitle TEXT,meetingDesc TEXT,appointUserName TEXT,roomName TEXT,state INTEGER)');
     await db.execute(
         'CREATE TABLE ${Constant.tableHeat} (id INTEGER PRIMARY KEY,year INTEGER,month INTEGER,day INTEGER,userId INTEGER,amHeat FLOAT,pmHeat FLOAT,createTime TEXT,state INTEGER)');
     await db.execute(

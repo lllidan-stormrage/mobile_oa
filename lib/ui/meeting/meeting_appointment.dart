@@ -4,8 +4,8 @@ import 'package:mobileoa/db/dao/appoint_dao.dart';
 import 'package:mobileoa/db/dao/user_dao.dart';
 import 'package:mobileoa/model/appoint_entity.dart';
 import 'package:mobileoa/model/user.dart';
+import 'package:mobileoa/ui/meeting/meeting_add.dart';
 import 'package:mobileoa/util/app_util.dart';
-import 'package:mobileoa/util/common_toast.dart';
 import 'package:mobileoa/util/date_util.dart';
 
 class MeetingAppointment extends StatefulWidget {
@@ -21,17 +21,13 @@ class MeetingAppointment extends StatefulWidget {
 class _AppointmentView extends State<MeetingAppointment> {
   final String roomName;
   final int roomId;
-  TextEditingController _mTitleController = TextEditingController();
-  TextEditingController _mDescController = TextEditingController();
+
   UserEntity mUser;
   List<MeetingAppointmentEntity> mData = new List();
-  var nowTime = DateTime.now();
 
   _AppointmentView(this.roomId, this.roomName);
 
-  String mStartTIme;
-  String mEndTime;
-
+  var nowTime = DateTime.now();
   bool isEmpty = false;
 
   @override
@@ -43,8 +39,9 @@ class _AppointmentView extends State<MeetingAppointment> {
   void _getData() async {
     int userId = await AppUtils.getLoginUserId();
     mUser = await UserDao.getInstance().getUserEntityById(userId);
-    mData = await AppointmentDao.getInstance()
-        .getAppointments(nowTime.year, nowTime.month, nowTime.day, roomId);
+    mData = await AppointmentDao.getInstance().getAppointments(
+        nowTime.year, nowTime.month, nowTime.day, roomId,
+        state: 0);
     setState(() {
       if (mData.isNotEmpty && mData.length > 0) {
         print(mData.toString());
@@ -61,293 +58,161 @@ class _AppointmentView extends State<MeetingAppointment> {
         appBar: AppBar(
           title: Text(
             roomName,
-            style: TextStyle(fontSize: 16,color: Colors.black87),
+            style: TextStyle(fontSize: 16, color: Colors.black87),
           ),
           iconTheme: IconThemeData(
             color: Colors.black87, //修改颜色
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                var bool = await Navigator.of(context)
+                    .push(new MaterialPageRoute(builder: (_) {
+                  return AddAppointPage(
+                    roomId: roomId,
+                    roomName: roomName,
+                    userId: mUser.id,
+                  );
+                }));
+                if (bool != null && bool) {
+                  _getData();
+                }
+              },
+            )
+          ],
           brightness: Brightness.light,
           backgroundColor: Colors.white,
         ),
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          physics: BouncingScrollPhysics(),
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "今日预约详情",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Visibility(
-              visible: !isEmpty,
-              child: Container(
-                color: Colors.white,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: mData.length,
-                    itemBuilder: (context, i) {
-                      return _buildAppoint(mData[i]);
-                    }),
-              ),
-            ),
-            Visibility(
-              visible: isEmpty,
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: Text(
-                  "今日暂无预定",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "发起我的预约",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            _buildTime(1),
-            SizedBox(
-              height: 10,
-            ),
-            _buildTime(2),
-            SizedBox(
-              height: 10,
-            ),
-            _buildTitle(),
-            SizedBox(
-              height: 10,
-            ),
-            _buildDesc(),
-            SizedBox(
-              height: 30,
-            ),
-            GestureDetector(
-              onTap: () {
-                _submit();
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 45,
-                margin: EdgeInsets.only(left: 15, right: 15),
-                decoration: BoxDecoration(
-                    color: Colors.blue, borderRadius: BorderRadius.circular(6)),
-                child: Center(
-                  child: Text(
-                    "提交",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            )
-          ],
+        body: Container(
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: isEmpty ? 1 : mData.length,
+              itemBuilder: (context, i) {
+                if (isEmpty) {
+                  return Container(
+                      padding: EdgeInsets.only(top: 100),
+                      child: Text(
+                        "当前会议室暂未预定，请点击右上角 + 开始预定",
+                        style: TextStyle(fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ));
+                } else {
+                  return _buildMsg(
+                      "${nowTime.year}/${nowTime.month}/${nowTime.day}",
+                      mData[i]);
+                }
+              }),
         ));
   }
 
-  Widget _buildAppoint(MeetingAppointmentEntity data) {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            '预约人: ${data.appointUserName}',
-          ),
-          Text(
-            '会议名称: ${data.meetingTitle}',
-          ),
-          Text(
-            '预约时间: ${DateUtils.getTimeStrByTimeStamp(data.startTime)} - ${DateUtils.getTimeStrByTimeStamp(data.endTime)} ',
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTime(int type) {
-    var mTime = type == 1 ? mStartTIme : mEndTime;
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          RichText(
-            text: TextSpan(
-                text: '*',
-                style: TextStyle(color: Colors.red),
-                children: [
-                  TextSpan(
-                      text: type == 1 ? '预定开始时间' : '预定结束时间',
-                      style: TextStyle(fontSize: 14, color: Colors.black))
-                ]),
-          ),
-          GestureDetector(
-            onTap: () {
-              _showTimePicker(type);
-            },
-            child: RichText(
-              text: TextSpan(
-                  text: mTime != null
-                      ? '${DateUtils.getTimeStrByTimeStamp(mTime)}'
-                      : "请选择时间",
-                  style: TextStyle(color: Colors.black38),
-                  children: [
-                    WidgetSpan(
-                        child: Image(
-                      image: AssetImage("images/ic_right_next.png"),
-                    ))
-                  ]),
+  Widget _buildMsg(String date, MeetingAppointmentEntity data) {
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(top: 12, left: 10, right: 10),
+        padding: EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(5)),
+        child: Stack(
+          alignment: Alignment(0, 0),
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.only(left: 10, top: 8, bottom: 8),
+                  decoration: BoxDecoration(
+                      color: Color(0xfff5f5f5),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.location_city,
+                            color: Colors.blue,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text('${data.meetingTitle}')
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Text('$date'),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Text(
+                    "预约人：${data.appointUserName}", //预约人
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Text(
+                    '${DateUtils.getTimeOnlyHourMinutesStrByTimeStamp(data.startTime)} - ${DateUtils.getTimeOnlyHourMinutesStrByTimeStamp(data.endTime)}',
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Text(
+                    '${data.meetingDesc}',
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
+            Positioned(
+                top: 80,
+                right: 30,
+                child: Transform(
+                  transform: Matrix4.rotationZ(-0.3),
+                  child: Text(
+                    getStateText(data),
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black45,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildTitle() {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          RichText(
-              text: TextSpan(
-                  text: "*",
-                  style: TextStyle(color: Colors.red),
-                  children: [
-                TextSpan(
-                    text: '会议名称：',
-                    style: TextStyle(fontSize: 14, color: Colors.black))
-              ])),
-          Expanded(
-            child: TextField(
-              controller: _mTitleController,
-              maxLines: 1,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(border: InputBorder.none),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDesc() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(10),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          RichText(
-            text: TextSpan(
-                text: '*',
-                style: TextStyle(color: Colors.red),
-                children: [
-                  TextSpan(
-                      text: "会议描述",
-                      style: TextStyle(fontSize: 14, color: Colors.black))
-                ]),
-          ),
-          TextField(
-            controller: _mDescController,
-            keyboardType: TextInputType.text,
-            maxLines: 8,
-            minLines: 4,
-            decoration:
-                InputDecoration(hintText: "请输入", border: InputBorder.none),
-          )
-        ],
-      ),
-    );
-  }
-
-  //1 startTime ,2 endTime
-  void _showTimePicker(int type) {
-    showTimePicker(
-      context: context,
-      initialTime: new TimeOfDay.now(),
-    ).then((val) {
-      setState(() {
-        print('${val.hour}:${val.minute}');
-        var dateTime = new DateTime(
-            nowTime.year, nowTime.month, nowTime.day, val.hour, val.minute);
-        if (type == 1) {
-          //开始时间
-          if (mEndTime != null) {
-            if (Comparable.compare(
-                    mEndTime, dateTime.millisecondsSinceEpoch.toString()) <=
-                0) {
-              ToastUtils.showError("开始时间必须小于截止时间");
-              return;
-            }
-          }
-          mStartTIme = (dateTime.millisecondsSinceEpoch).toString();
-        } else {
-          //结束时间
-          if (Comparable.compare(mStartTIme != null ? mStartTIme : "0",
-                  dateTime.millisecondsSinceEpoch.toString()) >=
-              0) {
-            ToastUtils.showError("截止时间必须大于开始时间");
-            return;
-          }
-          mEndTime = (dateTime.millisecondsSinceEpoch).toString();
-        }
-      });
-    }).catchError((err) {
-      //取消选择。重置
-    });
-  }
-
-  void _submit() async {
-    if (mStartTIme == null || mEndTime == null) {
-      ToastUtils.showError("请选中会议时间");
-      return;
-    }
-    if (_mTitleController.text.length <= 0) {
-      ToastUtils.showError("请输入标题");
-      return;
-    }
-    if (_mDescController.text.length <= 0) {
-      ToastUtils.showError("请输入会议的描述");
-      return;
-    }
-    MeetingAppointmentEntity appoint = new MeetingAppointmentEntity(
-        roomId: roomId,
-        appointUseId: mUser.id,
-        year: nowTime.year,
-        month: nowTime.month,
-        day: nowTime.day,
-        startTime: mStartTIme,
-        endTime: mEndTime,
-        meetingDesc: _mDescController.text,
-        appointUserName: mUser.name,
-        roomName: roomName,
-        meetingTitle: _mTitleController.text);
-
-    int value =
-        await AppointmentDao.getInstance().insertOrUpdateAppointment(appoint);
-    if (value == 0) {
-      ToastUtils.showSuccess("预约成功");
-      Navigator.pop(context);
+  String getStateText(MeetingAppointmentEntity data) {
+    if (Comparable.compare(
+                int.parse(data.startTime), nowTime.millisecondsSinceEpoch) <=
+            0 &&
+        Comparable.compare(
+                int.parse(data.endTime), nowTime.millisecondsSinceEpoch) >=
+            0) {
+      return '进行中';
+    } else if (Comparable.compare(
+                int.parse(data.startTime), nowTime.millisecondsSinceEpoch) <=
+            0 &&
+        Comparable.compare(
+                int.parse(data.endTime), nowTime.millisecondsSinceEpoch) <=
+            0) {
+      return '已结束';
     } else {
-      ToastUtils.showError("预约时间冲突");
+      return '待开始';
     }
   }
 }

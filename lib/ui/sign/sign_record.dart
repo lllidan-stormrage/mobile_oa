@@ -34,6 +34,7 @@ class _SignRecordView extends State<SignRecord> {
                 time: firstSign[i].pmSignTime,
                 place: firstSign[i].pmSignPlace,
                 state: 2,
+                signError: firstSign[i].leaveWorkEarly,
                 timeYmd:
                     '${firstSign[i].year}/${firstSign[i].month}/${firstSign[i].day}',
                 title: " 下班打卡"));
@@ -43,6 +44,7 @@ class _SignRecordView extends State<SignRecord> {
                 time: firstSign[i].amSignTime,
                 place: firstSign[i].amSignPlace,
                 state: 1,
+                signError: firstSign[i].workLate,
                 timeYmd:
                     '${firstSign[i].year}/${firstSign[i].month}/${firstSign[i].day}',
                 title: "上班打卡"));
@@ -58,14 +60,14 @@ class _SignRecordView extends State<SignRecord> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("我的签到记录", style: TextStyle(fontSize: 16,color: Colors.black87)),
+        title: Text("我的签到记录",
+            style: TextStyle(fontSize: 16, color: Colors.black87)),
         iconTheme: IconThemeData(
           color: Colors.black87, //修改颜色
         ),
         brightness: Brightness.light,
         backgroundColor: Colors.white,
       ),
-
       body: Container(
         child: ListView.builder(
           physics: BouncingScrollPhysics(),
@@ -123,8 +125,7 @@ class _SignRecordView extends State<SignRecord> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 10),
-                  child: Text(
-                      '${item.time}'),
+                  child: Text('${item.time}'),
                 )
               ],
             ),
@@ -132,9 +133,9 @@ class _SignRecordView extends State<SignRecord> {
           Padding(
             padding: EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Text(
-              '打卡成功',
+              item.signError ? "打卡异常" : '打卡成功',
               style: TextStyle(
-                  color: Colors.black,
+                  color: item.signError ? Colors.amber : Colors.black,
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
             ),
@@ -143,14 +144,15 @@ class _SignRecordView extends State<SignRecord> {
             padding: EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Text(
               '${item.timeYmd}日，位于${item.place}打卡',
-              style: TextStyle(color: Colors.black54),
+              style: TextStyle(
+                color: item.signError ? Colors.amber : Colors.black54,
+              ),
             ),
           )
         ],
       ),
     );
   }
-
 }
 
 abstract class ListItem {}
@@ -161,9 +163,16 @@ class MessageItem implements ListItem {
   final String time;
   final String place;
   final String timeYmd;
+  bool signError;
   final int state;
 
-  MessageItem({this.title, this.time, this.place, this.timeYmd, this.state});
+  MessageItem(
+      {this.title,
+      this.time,
+      this.place,
+      this.timeYmd,
+      this.state,
+      this.signError});
 }
 
 class EmptyItem implements ListItem {
