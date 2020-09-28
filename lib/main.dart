@@ -21,8 +21,6 @@ void main() {
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
-  var mUserId = 0;
-
   @override
   Widget build(BuildContext context) {
     //初始化sp
@@ -30,12 +28,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'hello meto',
-      home: mUserId > 0 ? HomePage() : LoginPage(),
+      home: LoginPage(),
     );
   }
 
   Future<void> hideSplashScreen() async {
-    mUserId = await AppUtils.getLoginUserId();
     Future.delayed(
         Duration(milliseconds: 2000), () => FlutterSplashScreen.hide());
     DbScript.insertOrUpdateTableUser();

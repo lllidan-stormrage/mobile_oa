@@ -55,7 +55,7 @@ class _SignView extends State<SignPage> {
     if (user.isNotEmpty) {
       mUser = user[0];
     }
-    // 查询用户是有签到过
+    // 查询用户是有签到过mPoi.address
     var date = new DateTime.now();
     var singInfo = await SignDao.getInstance()
         .getSign(id, date.year, date.month, date.day);
@@ -75,10 +75,6 @@ class _SignView extends State<SignPage> {
     } else {
       userSign = singInfo[0];
     }
-    print('aaa${userSign.toString()}');
-    List<UserSignEntity> lists =
-        await SignDao.getInstance().getSignAllByUseId(id);
-    print("bbbb${lists.length}");
   }
 
   @override

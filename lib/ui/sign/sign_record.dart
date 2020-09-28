@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileoa/db/dao/sign_dao.dart';
 import 'package:mobileoa/model/user_sign.dart';
+import 'package:mobileoa/ui/calender/x_calendar.dart';
 import 'package:mobileoa/util/app_util.dart';
 
 class SignRecord extends StatefulWidget {
@@ -67,6 +68,15 @@ class _SignRecordView extends State<SignRecord> {
         ),
         brightness: Brightness.light,
         backgroundColor: Colors.white,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () {
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+                  return XCalendarWidget();
+                }));
+              })
+        ],
       ),
       body: Container(
         child: ListView.builder(

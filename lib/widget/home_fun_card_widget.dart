@@ -7,7 +7,6 @@ import 'package:mobileoa/ui/memo/memo_page.dart';
 import 'package:mobileoa/ui/sign/sign_page.dart';
 import 'package:mobileoa/ui/sign/sign_record.dart';
 import 'package:mobileoa/ui/sign/sign_remake.dart';
-
 class HomeFunCardView extends StatelessWidget {
   final String mTitle;
   final int index;
@@ -84,7 +83,7 @@ class HomeFunCardView extends StatelessWidget {
         } else if (type == 2) {
 //          if (index == 0) {
 //            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-//              return BlueStylePage();
+//              return XCalendarWidget();
 //            }));
 //          } else if (index == 1) {
 //            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
